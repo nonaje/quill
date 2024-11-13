@@ -9,44 +9,34 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Contracts\Router\RouterInterface;
-use Quill\Contracts\Router\RouteStoreInterface;
 use Quill\Exceptions\Http\RouteNotFound;
 use Psr\Http\Message\ResponseInterface;
 
 final readonly class IdentifySearchedRoute implements MiddlewareInterface
 {
-    public function __construct(private RouterInterface $router)
-    {
-    }
+    public function __construct(private RouterInterface $router) { }
 
     /**
      * @throws RouteNotFound
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $route = $this->foundRouteOrKill(
-            $this->router->routes(),
-            $request
-        );
-
-        if ($route === null) {
-            throw new RouteNotFound;
-        }
+        $route = $this->foundRouteOrKill($request);
 
         $request = $request->withAttribute('route', $route);
 
         return $handler->handle($request);
     }
 
-    private function foundRouteOrKill(array $routes, ServerRequestInterface $request): null|RouteInterface
+    private function foundRouteOrKill(ServerRequestInterface $request): null|RouteInterface
     {
-        foreach ($routes as $route) {
-            if (!$this->matchRequestedUri($route, $request)) continue;
+        foreach ($this->router->routes() as $route) {
+            if (! $this->matchRequestedUri($route, $request)) continue;
 
             return $route;
         }
 
-        return null;
+        throw new RouteNotFound;
     }
 
     private function matchRequestedUri(RouteInterface $route, ServerRequestInterface $request): bool

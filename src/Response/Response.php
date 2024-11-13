@@ -14,21 +14,28 @@ use Quill\Factory\Psr7\Psr7Factory;
 class Response implements ResponseInterface
 {
     public function __construct(
-        private PsrResponseInterface $psrResponse
-    )
-    {
-    }
+        protected PsrResponseInterface $psrResponse
+    ) { }
 
     public function getPsrResponse(): PsrResponseInterface
     {
         return $this->psrResponse;
     }
 
+    public function plain(string $plain): self
+    {
+        $stream = Psr7Factory::streamFactory()->createStream($plain);
+
+        $response = $this->getPsrResponse()
+            ->withBody($stream)
+            ->withHeader(HttpHeader::CONTENT_TYPE->value, MimeType::PLAINTEXT->value);
+
+        return $this->setPsrResponse($response);
+    }
+
     public function json(array $data): self
     {
-        $content = json_encode($data);
-
-        $stream = Psr7Factory::streamFactory()->createStream($content);
+        $stream = Psr7Factory::streamFactory()->createStream(json_encode($data));
 
         $response = $this->getPsrResponse()
             ->withBody($stream)

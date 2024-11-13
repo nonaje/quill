@@ -10,77 +10,57 @@ use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteGroupInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Contracts\Router\RouterInterface;
-use Quill\Support\Traits\CanHasMiddlewares;
+use Quill\Support\Traits\Middlewares;
 
 readonly class RouteGroup implements RouteGroupInterface
 {
-    use CanHasMiddlewares;
+    use Middlewares;
 
-    private function __construct(
-        private RouterInterface $router,
-        private MiddlewareStoreInterface $middlewares
-    )
-    {
+    public function __construct(
+        private string                      $prefix,
+        private \Closure                    $routes,
+        private RouterInterface             $router,
+        private MiddlewareStoreInterface    $middlewares
+    ) {
+        $this->registerRoutes();
     }
 
-    public static function make(
-        string                   $prefix,
-        Closure                  $routes,
-        MiddlewareStoreInterface $middlewares = new MiddlewareStore
-    ): RouteGroupInterface
+    private function registerRoutes(): void
     {
-        $prefix = trim($prefix, '/');
-        $prefix = ($prefix == '/') ? $prefix : "/$prefix/";
-
-        $router = new Router(new RouteStore, new MiddlewareStore, $prefix);
-
-        $group = new RouteGroup($router, $middlewares);
-
-        // Register routes inside a group definition
-        $routes($router);
-
-        return $group->assert();
+        ($this->routes)($this->router);
     }
 
-    private function assert(): RouteGroupInterface
-    {
-        // TODO: Review group validations
-        return $this;
-    }
-
-    public function routes(MiddlewareStoreInterface $parentMiddlewares = null): array
+    public function routes(): array
     {
         $routes = [];
-        $groupMiddlewares = array_merge(
-            array_flatten($this->getMiddlewares()->all()),
-            array_flatten($parentMiddlewares ? $parentMiddlewares->all() : [])
-        );
 
         foreach ($this->router->routes() as $unsolved) {
-            if ($unsolved instanceof RouteInterface) {
-                $routeMiddlewares = array_merge(
-                    $groupMiddlewares,
-                    array_flatten($unsolved->getMiddlewares()->all())
-                );
-
-                if ($routeMiddlewares) {
-                    $unsolved->getMiddlewares()->reset()->add($routeMiddlewares);
-                }
-
-                $routes[] = $unsolved;
-                continue;
-            }
-
-            if ($unsolved instanceof RouteGroupInterface) {
-                $routes = array_merge($routes, $unsolved->routes());
-                continue;
-            }
-
-            throw new LogicException(
-                'We found an invalid route inside a group, please check your groups routes definitions'
-            );
+            $routes = array_merge_recursive($routes, $this->resolve($unsolved));
         }
 
         return $routes;
+    }
+
+    private function resolve(RouteGroupInterface|RouteInterface $unsolved): array
+    {
+        return match (true) {
+            $unsolved instanceof RouteInterface => [$this->mergeMiddlewares($unsolved)],
+
+            $unsolved instanceof RouteGroupInterface => $unsolved->routes(),
+        };
+    }
+
+    private function mergeMiddlewares(RouteInterface $route): RouteInterface
+    {
+        // Merge first the group middlewares, after the route middlewares
+        $routeMiddlewares = array_merge(
+            $this->getMiddlewares()->all(),
+            $route->getMiddlewares()->all()
+        );
+
+        // Set the new ordered middlewares
+        $route->getMiddlewares()->reset()->add($routeMiddlewares);
+
+        return $route;
     }
 }

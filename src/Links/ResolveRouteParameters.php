@@ -15,14 +15,15 @@ final class ResolveRouteParameters implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        /** @var RouteInterface $route */
         $route = $request->getAttribute('route');
 
-        $request = $request->withAttribute('route', Route::make(
+        $request = $request->withAttribute('route', new Route(
             uri: $route->uri(),
-            method: $route->method()->value,
+            method: $route->method(),
             target: $route->target(),
-            params: $this->resolveRouteParams($route, $request),
-            middlewares: $route->getMiddlewares()
+            middlewares: $route->getMiddlewares(),
+            params: $this->resolveRouteParams($route, $request)
         ));
 
         return $handler->handle($request);

@@ -96,4 +96,11 @@ class RouteStore implements RouteStoreInterface
     {
         return count($this->routes);
     }
+
+    public function reset(): RouteStoreInterface
+    {
+        $this->routes = [];
+
+        return $this;
+    }
 }

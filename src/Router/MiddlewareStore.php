@@ -16,6 +16,7 @@ final class MiddlewareStore implements MiddlewareStoreInterface
 
     public function add(string|array|Closure|MiddlewareInterface $middleware): self
     {
+        // TODO: Check if the MiddlewareFactory logic must be in another place
         $middlewares = array_flatten([$middleware]);
 
         foreach ($middlewares as $key => $middleware) {
@@ -43,6 +44,6 @@ final class MiddlewareStore implements MiddlewareStoreInterface
      */
     public function all(): array
     {
-        return $this->stack;
+        return array_flatten($this->stack);
     }
 }

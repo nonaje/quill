@@ -16,9 +16,7 @@ class Config implements ConfigurationInterface
 
     protected function __construct(
         private readonly DotNotationParserInterface $parser
-    )
-    {
-    }
+    ) { }
 
     public function all(): array
     {

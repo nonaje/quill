@@ -20,8 +20,6 @@ final class ExecuteRouteMiddlewares implements MiddlewareInterface
             return $handler->handle($request);
         }
 
-        /** @var null|RequestHandlerInterface $next */
-        $next = null;
         foreach (array_reverse($middlewares) as $key => $middleware) {
             if ($key === 0) {
                 $next = RequestHandlerFactory::createRequestHandler($middleware, $handler);

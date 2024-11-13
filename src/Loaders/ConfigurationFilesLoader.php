@@ -15,30 +15,12 @@ final class ConfigurationFilesLoader implements FilesLoader
 
     protected function __construct(
         private readonly ConfigurationInterface $config,
-    )
-    {
-    }
+    ) { }
 
-    /**
-     * @throws FileNotFoundException
-     */
-    public function loadFiles(string ...$filenames): void
+    public function load(string ...$filenames): void
     {
-        foreach ($filenames as $filename) {
-            $this->loadConfig($filename);
-        }
-    }
-
-    /**
-     * @throws FileNotFoundException
-     */
-    private function loadConfig(string $filename = null): void
-    {
-        $filename ??= path()->applicationFile('config');
-
-        if (!file_exists($filename)) {
-            throw new FileNotFoundException($filename);
-        }
+        $configurationPath = path()->applicationFile('config');
+        $filename ??= $configurationPath;
 
         if (is_file($filename)) {
             $this->config->put(
@@ -50,10 +32,17 @@ final class ConfigurationFilesLoader implements FilesLoader
         }
 
         if (is_dir($filename)) {
-            foreach (scandir($filename) as $filename) {
+            $configurationFiles = scandir($filename);
+            if (is_array($configurationFiles)) {
+                $configurationFiles = array_diff($configurationFiles, ['.', '..']);
+            }
+
+            foreach ($configurationFiles as $filename) {
+                // Removing the .php
+                $name = substr(basename($filename), 0, -4);
                 $this->config->put(
-                    key: substr(basename($filename), 0, -4),
-                    value: require_once $filename
+                    key: $name,
+                    value: require "$configurationPath/$filename"
                 );
             }
         }

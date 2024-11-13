@@ -4,123 +4,111 @@ declare(strict_types=1);
 
 namespace Quill;
 
-use Closure;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Quill\Config\Config;
 use Quill\Contracts\ApplicationInterface;
-use Quill\Contracts\Configuration\ConfigurationInterface;
 use Quill\Contracts\Handler\ErrorHandlerInterface;
 use Quill\Contracts\Handler\RequestHandlerChainInterface;
-use Quill\Contracts\Loader\FilesLoader;
 use Quill\Contracts\Response\ResponseMessengerInterface;
 use Quill\Contracts\Router\MiddlewareStoreInterface;
-use Quill\Contracts\Router\RouterInterface;
-use Quill\Contracts\Support\PathFinderInterface;
+use Quill\Contracts\Router\RouteStoreInterface;
 use Quill\Factory\Psr7\Psr7Factory;
 use Quill\Factory\QuillResponseFactory;
 use Quill\Links\ExecuteRouteMiddlewares;
 use Quill\Links\ExecuteRouteTarget;
-use Quill\Links\HandlePossibleFutureError;
+use Quill\Links\HandleFutureErrors;
 use Quill\Links\IdentifySearchedRoute;
 use Quill\Links\ResolveRouteParameters;
+use Quill\Loaders\ConfigurationFilesLoader;
+use Quill\Loaders\DotEnvLoader;
+use Quill\Loaders\RouteFilesLoader;
+use Quill\Router\Router;
+use Quill\Support\Dot\Parser;
 use Quill\Support\Traits\Singleton;
 
-final class Quill implements ApplicationInterface
+final class Quill extends Router implements ApplicationInterface
 {
     use Singleton;
 
-    private ErrorHandlerInterface $errorHandler;
-
     protected function __construct(
-        private readonly ConfigurationInterface         $config,
-        private readonly FilesLoader                    $configurationFilesLoader,
-        private readonly FilesLoader                    $dotEnvLoader,
-        private readonly PathFinderInterface            $pathFinder,
+        // Quill properties
+        private readonly MiddlewareStoreInterface       $globalMiddlewares,
         private readonly RequestHandlerChainInterface   $stack,
-        private readonly MiddlewareStoreInterface       $uses,
         private readonly ResponseMessengerInterface     $messenger,
-        private readonly RouterInterface                $router,
-        ErrorHandlerInterface                           $errorHandler
-    )
-    {
+        private ErrorHandlerInterface                   $errorHandler,
+
+        // Router properties
+        MiddlewareStoreInterface                        $routeMiddlewares,
+        RouteStoreInterface                             $routeStore,
+    ) {
+        parent::__construct($routeMiddlewares, $routeStore);
+
         $this->setErrorHandler($errorHandler);
+
+        // AUTOLOAD
+        $config = Config::make(Parser::make());
+        ConfigurationFilesLoader::make($config)->load();
+        DotEnvLoader::make($config)->load();
+        RouteFilesLoader::make($this)->load();
     }
 
-    public function setErrorHandler(ErrorHandlerInterface $errorHandler): ApplicationInterface
+    /** @inheritDoc */
+    public function use(string|array|\Closure|MiddlewareInterface $middleware): ApplicationInterface
     {
-        $this->errorHandler = $errorHandler;
-
-        set_error_handler([$this->errorHandler, 'captureError']);
-        set_exception_handler([$this->errorHandler, 'captureException']);
+        $this->globalMiddlewares->add($middleware);
 
         return $this;
     }
 
-    public function config(): ConfigurationInterface
+    /** @inheritDoc */
+    public function setErrorHandler(ErrorHandlerInterface $errorHandler): ApplicationInterface
     {
-        return $this->config;
+        set_error_handler([$errorHandler, 'captureError']);
+        set_exception_handler([$errorHandler, 'captureException']);
+
+        $this->errorHandler = $errorHandler;
+
+        return $this;
     }
 
-    public function path(): PathFinderInterface
-    {
-        return $this->pathFinder;
-    }
-
+    /** @inheritDoc */
     public function up(): void
     {
-        $request = Psr7Factory::createPsr7ServerRequest();
-
         $this->prepareLifecycle();
+
+        $request = Psr7Factory::createPsr7ServerRequest();
 
         $response = $this->handle($request);
 
-        $response = QuillResponseFactory::createFromPsrResponse($response);
-
-        $this->messenger->send($response);
+        $this->messenger->send(QuillResponseFactory::createFromPsrResponse($response));
     }
 
-    public function router(): RouterInterface
-    {
-        return $this->router;
-    }
-
-    public function using(string|array|Closure|MiddlewareInterface $middleware): ApplicationInterface
-    {
-        $this->uses->add([$middleware]);
-
-        return $this;
-    }
-
-    public function loadConfigurationFiles(string ...$filenames): ApplicationInterface
-    {
-        $this->configurationFilesLoader->loadFiles(...$filenames);
-
-        return $this;
-    }
-
-    public function loadDotEnv(string $filename = ''): ApplicationInterface
-    {
-        $this->dotEnvLoader->loadFiles($filename);
-
-        return $this;
-    }
-
+    /**
+     * It merges user-registered global middlewares with application lifecycle.
+     *
+     * Lifecycle:
+     * 1.- Set the error handler
+     * 2.- Identifies the searched route or returns 404
+     * 3.- Try to resolve the route parameters if applicable
+     * 4.- Run the global middlewares registered by the user
+     * 5.- Run the route middlewares
+     *
+     * @return void
+     */
     private function prepareLifecycle(): void
     {
         // Quill middlewares (Required Lifecycle)
         $lifecycle = [
-            new HandlePossibleFutureError($this->errorHandler),
-            new IdentifySearchedRoute($this->router()),
+            new HandleFutureErrors($this->errorHandler),
+            new IdentifySearchedRoute($this),
             new ResolveRouteParameters,
             3 => new ExecuteRouteMiddlewares
         ];
 
-        /*
-            Sets the order of the user-defined global middlewares using the "using" function
-            just before the route middlewares.
-        */
-        array_splice($lifecycle, 3, 0, $this->uses->all());
+        // Sets the order of the user-defined global middlewares just before the route middlewares.
+        array_splice($lifecycle, 3, 0, $this->globalMiddlewares->all());
 
         // Transform multidimensional arrays into one-dimensional array
         $stack = array_flatten($lifecycle);
@@ -137,6 +125,14 @@ final class Quill implements ApplicationInterface
         }
     }
 
+    /**
+     * It executes the first element of the stack (Error Handler) which causes the chain execution of the other handlers.
+     *
+     * It ends by obtaining the response returned by the route target.
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     private function handle(ServerRequestInterface $request): ResponseInterface
     {
         // Get the las element added to the stack (ErrorHandler)

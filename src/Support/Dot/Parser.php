@@ -15,8 +15,6 @@ final class Parser implements DotNotationParserInterface
 
     private array $list = [];
 
-    protected function __construct() {}
-
     /**
      * @inheritDoc
      */
@@ -55,7 +53,7 @@ final class Parser implements DotNotationParserInterface
      */
     public function first(): string
     {
-        return $this->list[0];
+        return $this->list[0] ?? '';
     }
 
     /**
@@ -63,7 +61,7 @@ final class Parser implements DotNotationParserInterface
      */
     public function last(): string
     {
-        return $this->list[$this->count() - 1];
+        return $this->list[$this->count() - 1] ?? '';
     }
 
     /**

@@ -13,16 +13,11 @@ class QuillResponseFactory extends Psr7Factory
 {
     public static function createQuillResponse(): ResponseInterface
     {
-        return new Response(self::createPsr7Response());
+        return new Response(static::responseFactory()->createResponse());
     }
 
     public static function createFromPsrResponse(PsrResponseInterface $response): ResponseInterface
     {
         return new Response($response);
-    }
-
-    private static function createPsr7Response(): PsrResponseInterface
-    {
-        return static::responseFactory()->createResponse();
     }
 }

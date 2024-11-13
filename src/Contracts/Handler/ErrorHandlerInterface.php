@@ -9,7 +9,7 @@ use Throwable;
 
 interface ErrorHandlerInterface
 {
-    public function captureException(Throwable $e): ResponseInterface;
+    public function captureException(Throwable $e): never;
 
     public function captureError(
         int $errorCode,
@@ -17,5 +17,5 @@ interface ErrorHandlerInterface
         string $filename = null,
         int $line = null,
         array $context = null
-    ): ResponseInterface;
+    ): never;
 }

@@ -12,7 +12,7 @@ interface RouteGroupInterface
     /** @return RouteInterface[] */
     public function routes(): array;
 
-    public function middleware(string|array|Closure|MiddlewareInterface $middleware): self;
+    public function middleware(string|array|Closure|MiddlewareInterface $middleware): static;
 
     public function getMiddlewares(): MiddlewareStoreInterface;
 }

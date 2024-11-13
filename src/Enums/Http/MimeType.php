@@ -10,5 +10,6 @@ enum MimeType: string
 {
     use Steroids;
 
+    case PLAINTEXT = 'text/plain';
     case JSON = 'application/json';
 }

@@ -14,10 +14,11 @@ final class ResponseMessenger implements ResponseMessengerInterface
 
     protected function __construct() {}
 
-    public function send(ResponseInterface $response): void
+    public function send(ResponseInterface $response): never
     {
         $this->sendHeaders($response);
         $this->sendBody($response);
+        exit;
     }
 
     private function sendHeaders(ResponseInterface $response): void

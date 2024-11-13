@@ -7,6 +7,7 @@ use Quill\Contracts\ApplicationInterface;
 use Quill\Contracts\Support\PathFinderInterface;
 use Quill\Factory\QuillFactory;
 use Quill\Support\Dot\Parser;
+use Quill\Support\PathFinder\Path;
 
 if (!function_exists('quill')) {
     function quill(): ApplicationInterface
@@ -42,7 +43,7 @@ if (!function_exists('path')) {
      */
     function path(): PathFinderInterface
     {
-        return quill()->path();
+        return Path::make();
     }
 }
 
@@ -52,7 +53,7 @@ if (!function_exists('array_flatten')) {
         $results = [];
 
         foreach ($toFlatten as $value) {
-            if (is_array($value) && !empty($value)) {
+            if (is_array($value)) {
                 $results = array_merge($results, array_flatten($value));
             } else {
                 $results[] = $value;

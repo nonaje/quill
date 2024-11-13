@@ -12,7 +12,5 @@ abstract class Controller
     public function __construct(
         protected readonly RequestInterface  $request,
         protected readonly ResponseInterface $response
-    )
-    {
-    }
+    ) { }
 }

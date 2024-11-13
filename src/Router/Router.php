@@ -4,91 +4,94 @@ declare(strict_types=1);
 
 namespace Quill\Router;
 
-use Closure;
+use \Closure;
 use LogicException;
-use Quill\Contracts\Loader\FilesLoader;
 use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteGroupInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Contracts\Router\RouterInterface;
 use Quill\Contracts\Router\RouteStoreInterface;
 use Quill\Enums\Http\HttpMethod;
-use Quill\Exceptions\FileNotFoundException;
-use Quill\Support\Traits\CanHasMiddlewares;
+use Quill\Support\Traits\Middlewares;
 
-final readonly class Router implements RouterInterface
+class Router implements RouterInterface
 {
-    use CanHasMiddlewares;
+    use Middlewares;
 
-    public function __construct(
-        private RouteStoreInterface         $store,
-        private MiddlewareStoreInterface    $middlewares,
-        private string                      $prefix = ''
-    )
+    protected function __construct(
+        private readonly MiddlewareStoreInterface   $middlewares,
+        private readonly RouteStoreInterface        $routes,
+        private readonly string                     $prefix = ''
+    ) { }
+
+    /** @inheritDoc */
+    public function routes(): array
     {
+        return $this->routes->all();
     }
 
+    /** @inheritDoc */
+    public function group(string $prefix, Closure $routes): RouteGroupInterface
+    {
+        $middlewares = $this->getMiddlewares()->all();
+        $prefix = $this->prefix . '/' . trim($prefix, '/');
+
+        $group = $this->routes->addGroup(new RouteGroup(
+            prefix: $prefix,
+            routes: $routes,
+            router: new self(
+                middlewares: new MiddlewareStore,
+                routes: new RouteStore,
+                prefix: $prefix
+            ),
+            middlewares: (new MiddlewareStore())->add($middlewares),
+        ));
+
+        $this->getMiddlewares()->reset();
+
+        return $group;
+    }
+
+    /**
+     * Register the routes with their respective http method
+     *
+     * @param string $method
+     * @param array $arguments
+     * @return RouteInterface
+     */
     public function __call(string $method, array $arguments = []): RouteInterface
     {
-        if (in_array(strtoupper($method), HttpMethod::values())) {
-            return $this->map($method, ...$arguments);
+        $enumMethod = HttpMethod::from(strtoupper($method));
+
+        if (in_array($enumMethod->value, HttpMethod::values())) {
+            return $this->map($enumMethod, ...$arguments);
         }
 
         throw new LogicException("Undefined method " . self::class . "@$method");
     }
 
     /**
-     * @throws FileNotFoundException
+     * Add a new route to the collection
+     *
+     * @param HttpMethod $method
+     * @param string $uri
+     * @param Closure|array|string $target
+     * @return RouteInterface
      */
-    public function loadRoutesFrom(string ...$filenames): RouterInterface
+    protected function map(HttpMethod $method, string $uri, Closure|array|string $target): RouteInterface
     {
-        // TODO: Check if it is possible to transfer the logic to a class (Single Responsibility Principle)
-        foreach ($filenames as $filename) {
-            if (! file_exists($filename)) {
-                throw new FileNotFoundException($filename);
-            }
+        $middlewares = $this->getMiddlewares()->all();
+        $uri = $this->prefix . '/' . trim($uri, '/');
 
-            $routes = require $filename;
-
-            if (is_callable($routes)) {
-                $routes($this);
-            }
-        }
-
-        return $this;
-    }
-
-    public function map(string $method, string $uri, Closure|array $target): RouteInterface
-    {
-        $route = $this->store->add(Route::make(
-            uri: $this->prefix . trim($uri, '/'),
+        $route = $this->routes->add(new Route(
+            uri: $uri,
             method: $method,
             target: $target,
-            middlewares: clone $this->middlewares
+            middlewares: (new MiddlewareStore())->add($middlewares),
         ));
 
-        $this->middlewares->reset();
+        $this->getMiddlewares()->reset();
 
         return $route;
-    }
-
-    public function group(string $prefix, Closure $routes): RouteGroupInterface
-    {
-        $group = $this->store->addGroup(
-            RouteGroup::make(
-                prefix: $this->prefix . $prefix,
-                routes: $routes,
-                middlewares: clone $this->middlewares
-            )
-        );
-
-        $this->middlewares->reset();
-
-        return $group;
-    }
-
-    public function routes(): array
-    {
-        return $this->store->all();
     }
 }

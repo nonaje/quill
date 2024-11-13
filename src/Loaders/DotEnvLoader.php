@@ -19,20 +19,20 @@ final class DotEnvLoader implements FilesLoader
     {
     }
 
-    public function loadFiles(string ...$filenames): void
+    public function load(string ...$filenames): void
     {
         if (count($filenames) > 1) {
             throw new InvalidArgumentException('Only one dotenv file can be loaded.');
         }
 
-        $filename = $filenames[0];
+        $filename ??= path()->applicationFile('.env');
 
         if (! str_ends_with($filename, '.env')) {
             throw new InvalidArgumentException("File: {$filename} must be a .env file");
         }
 
-        if (!file_exists($filename)) {
-            throw new InvalidArgumentException("File: {$filename} does not exists");
+        if (! file_exists($filename)) {
+            return;
         }
 
         // Load .env into configuration items
