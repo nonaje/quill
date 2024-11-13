@@ -16,18 +16,18 @@ class Request implements RequestInterface
 
     public function __construct(
         private readonly ServerRequestInterface $psrRequest
-    )
-    {
-    }
+    ) { }
 
     public function psrRequest(): ServerRequestInterface
     {
         return $this->psrRequest;
     }
 
-    public function body(): array
+    public function json(string $key = null, mixed $default = null): mixed
     {
-        return json_decode($this->psrRequest()->getBody()->getContents(), true);
+        $body = json_decode($this->psrRequest()->getBody()->getContents(), true) ?? $default;
+
+        return $key ? ($body[$key] ?? $default) : $body;
     }
 
     public function route(string $key, mixed $default = null): mixed

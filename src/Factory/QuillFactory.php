@@ -11,7 +11,7 @@ use Quill\Loaders\ConfigurationFilesLoader;
 use Quill\Loaders\DotEnvLoader;
 use Quill\Loaders\RouteFilesLoader;
 use Quill\Quill;
-use Quill\Response\ResponseMessenger;
+use Quill\Response\ResponseSender;
 use Quill\Router\MiddlewareStore;
 use Quill\Router\RouteStore;
 use Quill\Support\Dot\Parser;
@@ -26,7 +26,7 @@ final class QuillFactory
             routeStore: new RouteStore,
             errorHandler: JsonErrorHandler::make(),
             stack: RequestHandlerStack::make(),
-            messenger: ResponseMessenger::make(),
+            messenger: ResponseSender::make(),
         );
     }
 }

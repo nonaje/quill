@@ -10,6 +10,13 @@ enum MimeType: string
 {
     use Steroids;
 
-    case PLAINTEXT = 'text/plain';
+    // text
+    case PLAIN_TEXT = 'text/plain';
+    case HTML = 'text/html';
+
+    // application
     case JSON = 'application/json';
+
+    // multipart
+    case MULTIPART_FORM_DATA = 'multipart/form-data';
 }

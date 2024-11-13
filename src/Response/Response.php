@@ -24,24 +24,16 @@ class Response implements ResponseInterface
 
     public function plain(string $plain): self
     {
-        $stream = Psr7Factory::streamFactory()->createStream($plain);
-
-        $response = $this->getPsrResponse()
-            ->withBody($stream)
-            ->withHeader(HttpHeader::CONTENT_TYPE->value, MimeType::PLAINTEXT->value);
-
-        return $this->setPsrResponse($response);
+        return $this->setPsrResponse(
+            $this->body($plain, MimeType::PLAIN_TEXT)
+        );
     }
 
     public function json(array $data): self
     {
-        $stream = Psr7Factory::streamFactory()->createStream(json_encode($data));
-
-        $response = $this->getPsrResponse()
-            ->withBody($stream)
-            ->withHeader(HttpHeader::CONTENT_TYPE->value, MimeType::JSON->value);
-
-        return $this->setPsrResponse($response);
+        return $this->setPsrResponse(
+            $this->body(json_encode($data), MimeType::JSON)
+        );
     }
 
     public function code(HttpCode $code): self
@@ -56,5 +48,12 @@ class Response implements ResponseInterface
         $this->psrResponse = $response;
 
         return $this;
+    }
+
+    private function body(string $content, MimeType $mime): PsrResponseInterface
+    {
+        return $this->getPsrResponse()
+            ->withBody(Psr7Factory::streamFactory()->createStream($content))
+            ->withHeader(HttpHeader::CONTENT_TYPE->value, $mime->value);
     }
 }

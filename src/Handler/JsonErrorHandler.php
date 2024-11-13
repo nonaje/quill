@@ -5,7 +5,7 @@ namespace Quill\Handler;
 use Quill\Contracts\Handler\ErrorHandlerInterface;
 use Quill\Enums\Http\HttpCode;
 use Quill\Factory\QuillResponseFactory;
-use Quill\Response\ResponseMessenger;
+use Quill\Response\ResponseSender;
 use Quill\Support\Traits\Singleton;
 use Throwable;
 
@@ -16,7 +16,7 @@ class JsonErrorHandler implements ErrorHandlerInterface
     public function captureException(Throwable $e): never
     {
         $response = QuillResponseFactory::createQuillResponse()
-            ->code(HttpCode::SERVER_ERROR)
+            ->code(HttpCode::tryFrom($e->getCode()) ?? HttpCode::SERVER_ERROR)
             ->json([
                 'success' => false,
                 'code' => $e->getCode() ?: HttpCode::SERVER_ERROR,
@@ -26,7 +26,7 @@ class JsonErrorHandler implements ErrorHandlerInterface
                 'trace' => $e->getTrace(),
             ]);
 
-        ResponseMessenger::make()->send($response);
+        ResponseSender::make()->send($response);
     }
 
     public function captureError(
@@ -46,6 +46,6 @@ class JsonErrorHandler implements ErrorHandlerInterface
                 'context' => $context,
             ]);
 
-        ResponseMessenger::make()->send($response);
+        ResponseSender::make()->send($response);
     }
 }
