@@ -18,49 +18,46 @@ final readonly class ExecuteRouteTarget implements RequestHandlerInterface
 {
     private ResponseInterface       $response;
     private RequestInterface        $request;
-    private \Closure|array|string   $target;
+    private RouteInterface          $route;
 
     public function handle(ServerRequestInterface $request): PsrResponseInterface
     {
-        /** @var RouteInterface $matched */
-        $matched = $request->getAttribute('route');
-        $this->target = $matched->target();
-
+        $this->route = $request->getAttribute('route');
         $this->response = QuillResponseFactory::createQuillResponse();
         $this->request = QuillRequestFactory::createFromPsrRequest($request)
-            ->setMatchedRoute($matched);
+            ->setMatchedRoute($this->route);
 
         return $this->determineRouteTarget();
     }
 
     private function determineRouteTarget(): PsrResponseInterface {
         return match (true) {
-            is_string($this->target) => $this->resolveStringTarget(),
-            is_array($this->target) => $this->resolveArrayTarget(),
-            is_callable($this->target) => $this->resolveCallableTarget(),
+            is_string($this->route->target()) => $this->resolveStringTarget(),
+            is_array($this->route->target()) => $this->resolveArrayTarget(),
+            is_callable($this->route->target()) => $this->resolveCallableTarget(),
             default => throw new LogicException('It is not possible to determine the target of the route'),
         };
     }
 
     private function resolveStringTarget(): PsrResponseInterface
     {
-        $toResolve = explode('@', $this->target);
+        $toResolve = explode('@', $this->route->target());
         $controller = $toResolve[0];
         $method = $toResolve[1] ?? '__invoke';
 
         /** @var ResponseInterface $final */
-        $final = (new $controller($this->request, $this->response))->{$method}();
+        $final = (new $controller($this->request, $this->response, ...$this->route->params()))->{$method}();
 
         return $final->getPsrResponse();
     }
 
     private function resolveArrayTarget(): PsrResponseInterface
     {
-        $controller = $this->target[0];
+        $controller = $this->route->target()[0];
         $method = $target[1] ?? '__invoke';
 
         /** @var ResponseInterface $final */
-        $final = (new $controller($this->request, $this->response))->{$method}();
+        $final = (new $controller($this->request, $this->response, ...$this->route->params()))->{$method}();
 
         return $final->getPsrResponse();
     }
@@ -68,7 +65,7 @@ final readonly class ExecuteRouteTarget implements RequestHandlerInterface
     private function resolveCallableTarget(): PsrResponseInterface
     {
         /** @var ResponseInterface $final */
-        $final = ($this->target)($this->request, $this->response);
+        $final = ($this->route->target())($this->request, $this->response, ...$this->route->params());
 
         return $final->getPsrResponse();
     }

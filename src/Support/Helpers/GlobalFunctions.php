@@ -6,7 +6,6 @@ use Quill\Config\Config;
 use Quill\Contracts\ApplicationInterface;
 use Quill\Contracts\Support\PathFinderInterface;
 use Quill\Factory\QuillFactory;
-use Quill\Support\Dot\Parser;
 use Quill\Support\PathFinder\Path;
 
 if (!function_exists('quill')) {
@@ -27,13 +26,9 @@ if (!function_exists('config')) {
     /** @return Config|mixed */
     function config(string $key = null, mixed $default = null): mixed
     {
-        $config = Config::make(Parser::make());
+        $config = Config::make();
 
-        if ($key === null) {
-            return $config;
-        }
-
-        return $config->get($key, $default);
+        return $key ? $config->get($key, $default) : $config;
     }
 }
 

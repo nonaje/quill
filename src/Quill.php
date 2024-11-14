@@ -11,7 +11,7 @@ use Quill\Config\Config;
 use Quill\Contracts\ApplicationInterface;
 use Quill\Contracts\Handler\ErrorHandlerInterface;
 use Quill\Contracts\Handler\RequestHandlerChainInterface;
-use Quill\Contracts\Response\ResponseMessengerInterface;
+use Quill\Contracts\Response\ResponseSenderInterface;
 use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteStoreInterface;
 use Quill\Factory\Psr7\Psr7Factory;
@@ -25,7 +25,6 @@ use Quill\Loaders\ConfigurationFilesLoader;
 use Quill\Loaders\DotEnvLoader;
 use Quill\Loaders\RouteFilesLoader;
 use Quill\Router\Router;
-use Quill\Support\Dot\Parser;
 use Quill\Support\Traits\Singleton;
 
 final class Quill extends Router implements ApplicationInterface
@@ -34,21 +33,20 @@ final class Quill extends Router implements ApplicationInterface
 
     protected function __construct(
         // Quill properties
-        private readonly MiddlewareStoreInterface       $globalMiddlewares,
-        private readonly RequestHandlerChainInterface   $stack,
-        private readonly ResponseMessengerInterface     $messenger,
-        private ErrorHandlerInterface                   $errorHandler,
+        private readonly MiddlewareStoreInterface     $appMiddlewares,
+        private readonly RequestHandlerChainInterface $stack,
+        private readonly ResponseSenderInterface      $response,
+        private ErrorHandlerInterface                 $errorHandler,
 
         // Router properties
-        MiddlewareStoreInterface                        $routeMiddlewares,
-        RouteStoreInterface                             $routeStore,
+        RouteStoreInterface                           $routeStore,
     ) {
-        parent::__construct($routeMiddlewares, $routeStore);
+        parent::__construct($routeStore);
 
         $this->setErrorHandler($errorHandler);
 
-        // AUTOLOAD
-        $config = Config::make(Parser::make());
+        // Autoload configuration files, route files and .env
+        $config = Config::make();
         ConfigurationFilesLoader::make($config)->load();
         DotEnvLoader::make($config)->load();
         RouteFilesLoader::make($this)->load();
@@ -57,7 +55,7 @@ final class Quill extends Router implements ApplicationInterface
     /** @inheritDoc */
     public function use(string|array|\Closure|MiddlewareInterface $middleware): ApplicationInterface
     {
-        $this->globalMiddlewares->add($middleware);
+        $this->appMiddlewares->add($middleware);
 
         return $this;
     }
@@ -82,7 +80,7 @@ final class Quill extends Router implements ApplicationInterface
 
         $response = $this->handle($request);
 
-        $this->messenger->send(QuillResponseFactory::createFromPsrResponse($response));
+        $this->response->send(QuillResponseFactory::createFromPsrResponse($response));
     }
 
     /**
@@ -108,7 +106,7 @@ final class Quill extends Router implements ApplicationInterface
         ];
 
         // Sets the order of the user-defined global middlewares just before the route middlewares.
-        array_splice($lifecycle, 3, 0, $this->globalMiddlewares->all());
+        array_splice($lifecycle, 3, 0, $this->appMiddlewares->all());
 
         // Transform multidimensional arrays into one-dimensional array
         $stack = array_flatten($lifecycle);

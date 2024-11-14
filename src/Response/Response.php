@@ -36,6 +36,13 @@ class Response implements ResponseInterface
         );
     }
 
+    public function html(string $html): self
+    {
+        return $this->setPsrResponse(
+            $this->body($html, MimeType::HTML)
+        );
+    }
+
     public function code(HttpCode $code): self
     {
         $response = $this->psrResponse->withStatus($code->value);

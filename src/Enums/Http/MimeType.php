@@ -16,6 +16,7 @@ enum MimeType: string
 
     // application
     case JSON = 'application/json';
+    case X_WWW_FORM_URL_ENCODED = 'application/x-www-form-urlencoded';
 
     // multipart
     case MULTIPART_FORM_DATA = 'multipart/form-data';

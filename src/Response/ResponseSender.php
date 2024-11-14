@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Quill\Response;
 
 use Quill\Contracts\Response\ResponseInterface;
-use Quill\Contracts\Response\ResponseMessengerInterface;
+use Quill\Contracts\Response\ResponseSenderInterface;
 use Quill\Enums\Http\HttpHeader;
 use Quill\Enums\Http\MimeType;
 use Quill\Support\Traits\Singleton;
 
-final class ResponseSender implements ResponseMessengerInterface
+final class ResponseSender implements ResponseSenderInterface
 {
     use Singleton;
 

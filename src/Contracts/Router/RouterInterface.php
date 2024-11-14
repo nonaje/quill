@@ -28,14 +28,6 @@ interface RouterInterface
     public function group(string $prefix, Closure $routes): RouteGroupInterface;
 
     /**
-     * Register new middleware for the group or route
-     *
-     * @param string|array|Closure|MiddlewareInterface $middleware
-     * @return RouterInterface
-     */
-    public function middleware(string|array|Closure|MiddlewareInterface $middleware): static;
-
-    /**
      * Returns all registered routes.
      *
      * The routes within groups are "compiled" and returned as particular routes

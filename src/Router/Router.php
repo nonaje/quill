@@ -16,10 +16,7 @@ use Quill\Support\Traits\Middlewares;
 
 class Router implements RouterInterface
 {
-    use Middlewares;
-
     protected function __construct(
-        private readonly MiddlewareStoreInterface   $middlewares,
         private readonly RouteStoreInterface        $routes,
         private readonly string                     $prefix = ''
     ) { }
@@ -33,23 +30,17 @@ class Router implements RouterInterface
     /** @inheritDoc */
     public function group(string $prefix, Closure $routes): RouteGroupInterface
     {
-        $middlewares = $this->getMiddlewares()->all();
         $prefix = $this->prefix . '/' . trim($prefix, '/');
 
-        $group = $this->routes->addGroup(new RouteGroup(
+        return $this->routes->addGroup(new RouteGroup(
             prefix: $prefix,
             routes: $routes,
             router: new self(
-                middlewares: new MiddlewareStore,
                 routes: new RouteStore,
                 prefix: $prefix
             ),
-            middlewares: (new MiddlewareStore())->add($middlewares),
+            middlewares: new MiddlewareStore(),
         ));
-
-        $this->getMiddlewares()->reset();
-
-        return $group;
     }
 
     /**
@@ -61,13 +52,11 @@ class Router implements RouterInterface
      */
     public function __call(string $method, array $arguments = []): RouteInterface
     {
-        $enumMethod = HttpMethod::from(strtoupper($method));
-
-        if (in_array($enumMethod->value, HttpMethod::values())) {
-            return $this->map($enumMethod, ...$arguments);
+        if (! in_array(strtoupper($method), HttpMethod::values())) {
+            throw new LogicException("Undefined method " . self::class . "@$method");
         }
 
-        throw new LogicException("Undefined method " . self::class . "@$method");
+        return $this->map(HttpMethod::from(strtoupper($method)), ...$arguments);
     }
 
     /**
@@ -80,18 +69,13 @@ class Router implements RouterInterface
      */
     protected function map(HttpMethod $method, string $uri, Closure|array|string $target): RouteInterface
     {
-        $middlewares = $this->getMiddlewares()->all();
         $uri = $this->prefix . '/' . trim($uri, '/');
 
-        $route = $this->routes->add(new Route(
+        return $this->routes->add(new Route(
             uri: $uri,
             method: $method,
             target: $target,
-            middlewares: (new MiddlewareStore())->add($middlewares),
+            middlewares: new MiddlewareStore(),
         ));
-
-        $this->getMiddlewares()->reset();
-
-        return $route;
     }
 }
