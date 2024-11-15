@@ -59,23 +59,23 @@ use Quill\Contracts\Request\RequestInterface;
 use Quill\Contracts\Response\ResponseInterface;
 
 $router->get('/', fn (RequestInterface $req, ResponseInterface $res): ResponseInterface => $res->json([
-    'HTTP Method' => $req->psrRequest()->getMethod()
+    'HTTP Method' => $req->getPsrRequest()->getMethod()
 ]));
 
 $router->post('/', fn (RequestInterface $req, ResponseInterface $res): ResponseInterface => $res->json([
-    'HTTP Method' => $req->psrRequest()->getMethod()
+    'HTTP Method' => $req->getPsrRequest()->getMethod()
 ]));
 
 $router->put('/', fn (RequestInterface $req, ResponseInterface $res): ResponseInterface => $res->json([
-    'HTTP Method' => $req->psrRequest()->getMethod()
+    'HTTP Method' => $req->getPsrRequest()->getMethod()
 ]));
 
 $router->patch('/', fn (RequestInterface $req, ResponseInterface $res): ResponseInterface => $res->json([
-    'HTTP Method' => $req->psrRequest()->getMethod()
+    'HTTP Method' => $req->getPsrRequest()->getMethod()
 ]));
 
 $router->delete('/', fn (RequestInterface $req, ResponseInterface $res): ResponseInterface => $res->json([
-    'HTTP Method' => $req->psrRequest()->getMethod()
+    'HTTP Method' => $req->getPsrRequest()->getMethod()
 ]));
 ```
 
@@ -93,13 +93,13 @@ use Quill\Contracts\Response\ResponseInterface;
 $router->group('/api/', function (RouterInterface $router): void {
 
     $router->get('/foo', fn (RequestInterface $req, ResponseInterface $res): ResponseInterface => $res->json([
-        'URI' => $req->psrRequest()->getUri()->getPath()
+        'URI' => $req->getPsrRequest()->getUri()->getPath()
     ]));
 
     $router->group('/examples', function (RouterInterface $router) {
 
         $router->get('/group-inside-group', fn(RequestInterface $req, ResponseInterface $res): ResponseInterface => $res->json([
-            'URI' => $req->psrRequest()->getUri()->getPath()
+            'URI' => $req->getPsrRequest()->getUri()->getPath()
         ]));
     });
 });
@@ -137,13 +137,13 @@ return function (RouterInterface $router): void {
 
         $router->get('/group-inside-group',
             fn(RequestInterface $req, ResponseInterface $res): ResponseInterface => $res->json([
-                'URI' => $req->psrRequest()->getUri()->getPath()
+                'URI' => $req->getPsrRequest()->getUri()->getPath()
             ])
         );
 
         $router->get('/another-route-inside-group',
             fn(RequestInterface $req, ResponseInterface $res): ResponseInterface => $res->json([
-                'URI' => $req->psrRequest()->getUri()->getPath()
+                'URI' => $req->getPsrRequest()->getUri()->getPath()
             ])
         );
     });

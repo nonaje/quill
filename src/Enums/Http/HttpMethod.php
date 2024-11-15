@@ -10,8 +10,6 @@ enum HttpMethod: string
 {
     use Steroids;
 
-    case HEAD = 'HEAD';
-
     case GET = 'GET';
 
     case POST = 'POST';
@@ -21,4 +19,8 @@ enum HttpMethod: string
     case PATCH = 'PATCH';
 
     case DELETE = 'DELETE';
+
+    case HEAD = 'HEAD';
+
+    case OPTIONS = 'OPTIONS';
 }

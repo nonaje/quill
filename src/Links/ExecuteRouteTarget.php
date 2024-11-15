@@ -24,13 +24,20 @@ final readonly class ExecuteRouteTarget implements RequestHandlerInterface
     {
         $this->route = $request->getAttribute('route');
         $this->response = QuillResponseFactory::createQuillResponse();
-        $this->request = QuillRequestFactory::createFromPsrRequest($request)
-            ->setMatchedRoute($this->route);
+        $this->request = QuillRequestFactory::createFromPsrRequest($request);
 
-        return $this->determineRouteTarget();
+        /** @var ResponseInterface|null $final */
+        $final = ($this->determineRouteTarget())();
+
+        if (is_null($final)) {
+            throw new LogicException('Router target must return an instance of ' . ResponseInterface::class);
+        }
+
+        return $final->getPsrResponse();
     }
 
-    private function determineRouteTarget(): PsrResponseInterface {
+    private function determineRouteTarget(): callable
+    {
         return match (true) {
             is_string($this->route->target()) => $this->resolveStringTarget(),
             is_array($this->route->target()) => $this->resolveArrayTarget(),
@@ -39,34 +46,25 @@ final readonly class ExecuteRouteTarget implements RequestHandlerInterface
         };
     }
 
-    private function resolveStringTarget(): PsrResponseInterface
+    private function resolveStringTarget(): callable
     {
         $toResolve = explode('@', $this->route->target());
         $controller = $toResolve[0];
         $method = $toResolve[1] ?? '__invoke';
 
-        /** @var ResponseInterface $final */
-        $final = (new $controller($this->request, $this->response, ...$this->route->params()))->{$method}();
-
-        return $final->getPsrResponse();
+        return fn ()  => (new $controller($this->request, $this->response, $this->route->params()))->{$method}();
     }
 
-    private function resolveArrayTarget(): PsrResponseInterface
+    private function resolveArrayTarget(): callable
     {
         $controller = $this->route->target()[0];
         $method = $target[1] ?? '__invoke';
 
-        /** @var ResponseInterface $final */
-        $final = (new $controller($this->request, $this->response, ...$this->route->params()))->{$method}();
-
-        return $final->getPsrResponse();
+        return fn ()  => (new $controller($this->request, $this->response, $this->route->params()))->{$method}();
     }
 
-    private function resolveCallableTarget(): PsrResponseInterface
+    private function resolveCallableTarget(): callable
     {
-        /** @var ResponseInterface $final */
-        $final = ($this->route->target())($this->request, $this->response, ...$this->route->params());
-
-        return $final->getPsrResponse();
+        return fn () => ($this->route->target())($this->request, $this->response, $this->route->params());
     }
 }

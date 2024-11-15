@@ -7,53 +7,55 @@ namespace Quill\Request;
 use Psr\Http\Message\ServerRequestInterface;
 use Quill\Contracts\Request\RequestInterface;
 use Quill\Contracts\Router\RouteInterface;
-use Quill\Router\Route;
-use Quill\Support\Pattern\Singleton;
+use Quill\Enums\Http\HttpMethod;
+use Quill\Support\Traits\Singleton;
 
 class Request implements RequestInterface
 {
-    private null|Route $route = null;
+    use Singleton;
 
-    public function __construct(
-        private readonly ServerRequestInterface $psrRequest
-    ) { }
+    protected function __construct(protected readonly ServerRequestInterface $psrRequest) { }
 
-    public function psrRequest(): ServerRequestInterface
+    public function getPsrRequest(): ServerRequestInterface
     {
         return $this->psrRequest;
     }
 
-    public function json(string $key = null, mixed $default = null): mixed
-    {
-        $body = json_decode($this->psrRequest()->getBody()->getContents(), true) ?? $default;
-
-        return $key ? ($body[$key] ?? $default) : $body;
-    }
-
     public function route(string $key, mixed $default = null): mixed
     {
-        return $this->route->params()[$key] ?? $default;
+        return $this->getRoute()->params()[$key] ?? $default;
     }
 
-    public function setMatchedRoute(RouteInterface $route): self
+    public function method(): HttpMethod
     {
-        $this->route = $route;
-
-        return $this;
+        return HttpMethod::from(strtoupper($this->getPsrRequest()->getMethod()));
     }
 
-    public function getMatchedRoute(): null|RouteInterface
+    public function all(): mixed
     {
-        return $this->route;
+        // TODO: Implement method
+
+        return [];
     }
 
-    public function method(): string
+    public function get(string $key, mixed $default = null): mixed
     {
-        return $this->route?->method()->value ?? $_SERVER['REQUEST_METHOD'];
+        // TODO: Implement method
+
+        $value = $default;
+
+        return $value;
     }
 
-    public function uri(): string
+    private function getRoute(): RouteInterface
     {
-        return $_SERVER['REQUEST_URI'];
+        return $this->getPsrRequest()->getAttribute('route');
+    }
+
+    private function json(string $key, mixed $default): mixed
+    {
+        $body = json_decode($this->getPsrRequest()->getBody()->getContents(), true) ?? $default;
+
+        return $key ? ($body[$key] ?? $default) : $body;
     }
 }

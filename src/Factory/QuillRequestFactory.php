@@ -13,11 +13,11 @@ class QuillRequestFactory extends Psr7Factory
 {
     public static function createQuillRequest(): RequestInterface
     {
-        return new Request(static::createPsr7ServerRequest());
+        return Request::make(static::createPsr7ServerRequest());
     }
 
     public static function createFromPsrRequest(ServerRequestInterface $request): RequestInterface
     {
-        return new Request($request);
+        return Request::make($request);
     }
 }

@@ -4,12 +4,30 @@ declare(strict_types=1);
 
 use Quill\Config\Config;
 use Quill\Contracts\ApplicationInterface;
+use Quill\Contracts\Request\RequestInterface;
+use Quill\Contracts\Response\ResponseInterface;
 use Quill\Factory\QuillFactory;
+use Quill\Factory\QuillRequestFactory;
+use Quill\Factory\QuillResponseFactory;
 
 if (!function_exists('quill')) {
     function quill(): ApplicationInterface
     {
         return QuillFactory::make();
+    }
+}
+
+if (!function_exists('request')) {
+    function request(): RequestInterface
+    {
+        return QuillRequestFactory::createQuillRequest();
+    }
+}
+
+if (!function_exists('response')) {
+    function response(): ResponseInterface
+    {
+        return QuillResponseFactory::createQuillResponse();
     }
 }
 

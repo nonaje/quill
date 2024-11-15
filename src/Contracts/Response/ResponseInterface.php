@@ -14,4 +14,8 @@ interface ResponseInterface
     public function code(HttpCode $code): ResponseInterface;
 
     public function json(array $data): ResponseInterface;
+
+    public function plain(string $plain): ResponseInterface;
+
+    public function html(string $html): ResponseInterface;
 }
