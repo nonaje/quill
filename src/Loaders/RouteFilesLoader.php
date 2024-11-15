@@ -4,6 +4,7 @@ namespace Quill\Loaders;
 
 use Quill\Contracts\Loader\FilesLoader;
 use Quill\Contracts\Router\RouterInterface;
+use Quill\Support\PathFinder\Path;
 use Quill\Support\Traits\Singleton;
 
 class RouteFilesLoader implements FilesLoader
@@ -14,7 +15,7 @@ class RouteFilesLoader implements FilesLoader
 
     public function load(string ...$filenames): void
     {
-        $routesPath = path()->applicationFile('routes');
+        $routesPath = Path::toRoute();
 
         if (is_dir($routesPath)) {
             $routesFiles = scandir($routesPath);

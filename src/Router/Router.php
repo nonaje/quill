@@ -6,13 +6,11 @@ namespace Quill\Router;
 
 use \Closure;
 use LogicException;
-use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteGroupInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Contracts\Router\RouterInterface;
 use Quill\Contracts\Router\RouteStoreInterface;
 use Quill\Enums\Http\HttpMethod;
-use Quill\Support\Traits\Middlewares;
 
 class Router implements RouterInterface
 {

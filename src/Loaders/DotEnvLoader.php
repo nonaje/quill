@@ -7,6 +7,7 @@ namespace Quill\Loaders;
 use InvalidArgumentException;
 use Quill\Contracts\Configuration\ConfigurationInterface;
 use Quill\Contracts\Loader\FilesLoader;
+use Quill\Support\PathFinder\Path;
 use Quill\Support\Traits\Singleton;
 
 final class DotEnvLoader implements FilesLoader
@@ -25,7 +26,7 @@ final class DotEnvLoader implements FilesLoader
             throw new InvalidArgumentException('Only one dotenv file can be loaded.');
         }
 
-        $filename ??= path()->applicationFile('.env');
+        $filename ??= Path::toFile('.env');
 
         if (! str_ends_with($filename, '.env')) {
             throw new InvalidArgumentException("File: {$filename} must be a .env file");

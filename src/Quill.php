@@ -14,6 +14,7 @@ use Quill\Contracts\Handler\RequestHandlerChainInterface;
 use Quill\Contracts\Response\ResponseSenderInterface;
 use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteStoreInterface;
+use Quill\Exceptions\FileNotFoundException;
 use Quill\Factory\Psr7\Psr7Factory;
 use Quill\Factory\QuillResponseFactory;
 use Quill\Links\ExecuteRouteMiddlewares;
@@ -25,12 +26,16 @@ use Quill\Loaders\ConfigurationFilesLoader;
 use Quill\Loaders\DotEnvLoader;
 use Quill\Loaders\RouteFilesLoader;
 use Quill\Router\Router;
+use Quill\Support\PathFinder\Path;
 use Quill\Support\Traits\Singleton;
 
 final class Quill extends Router implements ApplicationInterface
 {
     use Singleton;
 
+    /**
+     * @throws FileNotFoundException
+     */
     protected function __construct(
         // Quill properties
         private readonly MiddlewareStoreInterface     $appMiddlewares,
@@ -43,13 +48,7 @@ final class Quill extends Router implements ApplicationInterface
     ) {
         parent::__construct($routeStore);
 
-        $this->setErrorHandler($errorHandler);
-
-        // Autoload configuration files, route files and .env
-        $config = Config::make();
-        ConfigurationFilesLoader::make($config)->load();
-        DotEnvLoader::make($config)->load();
-        RouteFilesLoader::make($this)->load();
+        $this->boot();
     }
 
     /** @inheritDoc */
@@ -78,7 +77,7 @@ final class Quill extends Router implements ApplicationInterface
 
         $request = Psr7Factory::createPsr7ServerRequest();
 
-        $response = $this->handle($request);
+        $response = $this->handleRequest($request);
 
         $this->response->send(QuillResponseFactory::createFromPsrResponse($response));
     }
@@ -131,12 +130,37 @@ final class Quill extends Router implements ApplicationInterface
      * @param ServerRequestInterface $request
      * @return ResponseInterface
      */
-    private function handle(ServerRequestInterface $request): ResponseInterface
+    private function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
         // Get the las element added to the stack (ErrorHandler)
         $handler = $this->stack->getLast();
 
         // Run the error handler and start the stack execution chain
         return $handler->handle($request);
+    }
+
+    /**
+     * Set essential settings for the operation of the application
+     *
+     * @throws FileNotFoundException
+     */
+    private function boot(): void
+    {
+        // Override PHP's default error handler
+        $this->setErrorHandler($this->errorHandler);
+
+        // Set the root directory of the application
+        Path::setApplicationPath(dirname(__DIR__, 4));
+
+        /*
+            Autoload:
+               - App config files
+               - App environment file (.env)
+               - App routes files
+        */
+        $config = Config::make();
+        ConfigurationFilesLoader::make($config)->load();
+        DotEnvLoader::make($config)->load();
+        RouteFilesLoader::make($this)->load();
     }
 }

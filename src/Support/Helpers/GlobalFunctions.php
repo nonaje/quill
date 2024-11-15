@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 use Quill\Config\Config;
 use Quill\Contracts\ApplicationInterface;
-use Quill\Contracts\Support\PathFinderInterface;
 use Quill\Factory\QuillFactory;
-use Quill\Support\PathFinder\Path;
 
 if (!function_exists('quill')) {
     function quill(): ApplicationInterface
@@ -29,16 +27,6 @@ if (!function_exists('config')) {
         $config = Config::make();
 
         return $key ? $config->get($key, $default) : $config;
-    }
-}
-
-if (!function_exists('path')) {
-    /**
-     * @return PathFinderInterface
-     */
-    function path(): PathFinderInterface
-    {
-        return Path::make();
     }
 }
 
