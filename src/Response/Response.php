@@ -10,18 +10,22 @@ use Quill\Enums\Http\HttpCode;
 use Quill\Enums\Http\HttpHeader;
 use Quill\Enums\Http\MimeType;
 use Quill\Factory\Psr7\Psr7Factory;
+use Quill\Support\PathFinder\Path;
+use Quill\Support\Traits\Singleton;
 
 class Response implements ResponseInterface
 {
-    public function __construct(
-        protected PsrResponseInterface $psrResponse
-    ) { }
+    use Singleton;
 
+    protected function __construct(protected PsrResponseInterface $psrResponse) { }
+
+    /** @inheritDoc */
     public function getPsrResponse(): PsrResponseInterface
     {
         return $this->psrResponse;
     }
 
+    /** @inheritDoc */
     public function plain(string $plain): self
     {
         return $this->setPsrResponse(
@@ -29,6 +33,7 @@ class Response implements ResponseInterface
         );
     }
 
+    /** @inheritDoc */
     public function json(array $data): self
     {
         return $this->setPsrResponse(
@@ -36,13 +41,20 @@ class Response implements ResponseInterface
         );
     }
 
+    /** @inheritDoc */
     public function html(string $html): self
     {
+        //Checks if the received argument is the name of an html file inside the 'views' folder
+        if (file_exists($path = $html) || file_exists($path = Path::toHtml($html)) || file_exists($path = Path::toHtml($html . '.html'))) {
+            $html = file_get_contents($path);
+        }
+
         return $this->setPsrResponse(
             $this->body($html, MimeType::HTML)
         );
     }
 
+    /** @inheritDoc */
     public function code(HttpCode $code): self
     {
         $response = $this->psrResponse->withStatus($code->value);
@@ -50,6 +62,12 @@ class Response implements ResponseInterface
         return $this->setPsrResponse($response);
     }
 
+    /**
+     * Set the updated instance of the psr response
+     *
+     * @param PsrResponseInterface $response
+     * @return self
+     */
     private function setPsrResponse(PsrResponseInterface $response): self
     {
         $this->psrResponse = $response;
@@ -57,6 +75,13 @@ class Response implements ResponseInterface
         return $this;
     }
 
+    /**
+     * Return the updated instance of the psr response with the new body and Content-Type header
+     *
+     * @param string $content
+     * @param MimeType $mime
+     * @return PsrResponseInterface
+     */
     private function body(string $content, MimeType $mime): PsrResponseInterface
     {
         return $this->getPsrResponse()

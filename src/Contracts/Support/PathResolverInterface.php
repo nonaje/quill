@@ -19,5 +19,5 @@ interface PathResolverInterface
 
     public static function toRoute(string $filename): string;
 
-    public static function toView(string $filename): string;
+    public static function toHtml(string $filename): string;
 }

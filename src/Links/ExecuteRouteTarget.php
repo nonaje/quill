@@ -26,17 +26,13 @@ final readonly class ExecuteRouteTarget implements RequestHandlerInterface
         $this->response = QuillResponseFactory::createQuillResponse();
         $this->request = QuillRequestFactory::createFromPsrRequest($request);
 
-        /** @var ResponseInterface|null $final */
-        $final = ($this->determineRouteTarget())();
+        /** @var ResponseInterface|null $response */
+        $response = ($this->resolveRouteTarget())();
 
-        if (is_null($final)) {
-            throw new LogicException('Router target must return an instance of ' . ResponseInterface::class);
-        }
-
-        return $final->getPsrResponse();
+        return is_null($response) ? $this->response->getPsrResponse() : $response->getPsrResponse();
     }
 
-    private function determineRouteTarget(): callable
+    private function resolveRouteTarget(): callable
     {
         return match (true) {
             is_string($this->route->target()) => $this->resolveStringTarget(),

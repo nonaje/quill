@@ -38,8 +38,12 @@ class Path implements PathResolverInterface
         return self::toFile('routes') . self::normalizeFilename($filename);
     }
 
-    public static function toView(string $filename = ''): string
+    public static function toHtml(string $filename = ''): string
     {
+        if (! str_ends_with($filename, '.html')) {
+            $filename .= '.html';
+        }
+
         return self::toFile('views') . self::normalizeFilename($filename);
     }
 

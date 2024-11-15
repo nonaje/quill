@@ -9,13 +9,45 @@ use Quill\Enums\Http\HttpCode;
 
 interface ResponseInterface
 {
+    /**
+     * Returns the PSR-7 response interface
+     *
+     * @return PsrResponseInterface
+     */
     public function getPsrResponse(): PsrResponseInterface;
 
+    /**
+     * Set the specified http code in the psr response
+     *
+     * @param HttpCode $code
+     * @return ResponseInterface
+     */
     public function code(HttpCode $code): ResponseInterface;
 
+    /**
+     * Set the response body as a Json
+     *
+     * @param array $data
+     * @return ResponseInterface
+     */
     public function json(array $data): ResponseInterface;
 
+    /**
+     * Set the response body as a plain text
+     *
+     * @param string $plain
+     * @return ResponseInterface
+     */
     public function plain(string $plain): ResponseInterface;
 
+    /**
+     * Set the response body as HTML
+     *
+     * This function can receive the HTML text or
+     * the name of the file inside the 'views' folder, ending with .html or not
+     *
+     * @param string $html
+     * @return ResponseInterface
+     */
     public function html(string $html): ResponseInterface;
 }
