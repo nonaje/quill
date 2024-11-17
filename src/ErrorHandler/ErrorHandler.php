@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Quill\ErrorHandler;
 
 use ErrorException;
-use Exception;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;

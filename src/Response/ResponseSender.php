@@ -14,8 +14,6 @@ final class ResponseSender implements ResponseSenderInterface
 {
     use Singleton;
 
-    protected function __construct() {}
-
     public function send(ResponseInterface $response): never
     {
         $this->sendHeaders($response);

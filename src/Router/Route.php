@@ -9,7 +9,6 @@ use LogicException;
 use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Enums\Http\HttpMethod;
-use Quill\Support\Traits\Middlewares;
 
 final readonly class Route implements RouteInterface
 {

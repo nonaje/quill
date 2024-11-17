@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Quill\Router;
 
-use Closure;
-use LogicException;
 use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteGroupInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Contracts\Router\RouterInterface;
-use Quill\Support\Traits\Middlewares;
 
 readonly class RouteGroup implements RouteGroupInterface
 {

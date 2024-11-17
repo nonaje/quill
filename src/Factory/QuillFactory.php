@@ -19,7 +19,7 @@ final class QuillFactory
             appMiddlewares: new MiddlewareStore,
             routeStore: new RouteStore,
             errorHandler: JsonErrorHandler::make(QuillResponseFactory::createQuillResponse()),
-            handler: LifecyclePipeline::make(),
+            lifecycle: LifecyclePipeline::make(),
             response: ResponseSender::make(),
         );
     }

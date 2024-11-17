@@ -4,23 +4,21 @@ declare(strict_types=1);
 
 namespace Quill;
 
+use Exception;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Quill\Config\Config;
 use Quill\Contracts\ApplicationInterface;
-use Quill\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Quill\Contracts\Lifecycle\LifecyclePipelineInterface;
 use Quill\Contracts\Response\ResponseSenderInterface;
 use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteStoreInterface;
-use Quill\Exceptions\FileNotFoundException;
 use Quill\Factory\Psr7\Psr7Factory;
 use Quill\Factory\QuillResponseFactory;
 use Quill\Lifecycle\ExecuteRouteMiddlewares;
 use Quill\Lifecycle\RequestHandler;
 use Quill\Lifecycle\ExceptionHandlingMiddleware;
-use Quill\Lifecycle\SearchRouteMiddleware;
-use Quill\Lifecycle\RouteParametersMiddleware;
+use Quill\Lifecycle\FindRouteMiddleware;
 use Quill\Loaders\ConfigurationFilesLoader;
 use Quill\Loaders\DotEnvLoader;
 use Quill\Loaders\RouteFilesLoader;
@@ -33,17 +31,17 @@ final class Quill extends Router implements ApplicationInterface
     use Singleton;
 
     /**
-     * @throws FileNotFoundException
+     * @throws Exception
      */
     protected function __construct(
         // Quill properties
-        private RequestHandlerInterface $errorHandler,
-        private readonly MiddlewareStoreInterface $appMiddlewares,
-        private readonly LifecyclePipelineInterface $handler,
-        private readonly ResponseSenderInterface $response,
+        private RequestHandlerInterface             $errorHandler,
+        private readonly MiddlewareStoreInterface   $appMiddlewares,
+        private readonly LifecyclePipelineInterface $lifecycle,
+        private readonly ResponseSenderInterface    $response,
 
         // Router properties
-        RouteStoreInterface                           $routeStore,
+        RouteStoreInterface                         $routeStore,
     ) {
         parent::__construct($routeStore);
 
@@ -59,7 +57,7 @@ final class Quill extends Router implements ApplicationInterface
     }
 
     /** @inheritDoc */
-    public function setErrorHandler(ErrorHandlerInterface $errorHandler): ApplicationInterface
+    public function setErrorHandler(RequestHandlerInterface $errorHandler): ApplicationInterface
     {
         $this->errorHandler = $errorHandler;
 
@@ -71,12 +69,11 @@ final class Quill extends Router implements ApplicationInterface
     {
         $request = Psr7Factory::createPsr7ServerRequest();
 
-        $response = $this->handler
+        $response = $this->lifecycle
             ->send($request)
             ->through([
                 new ExceptionHandlingMiddleware($this->errorHandler),
-                new SearchRouteMiddleware($this),
-                new RouteParametersMiddleware,
+                new FindRouteMiddleware($this),
                 // Run user-defined global middlewares before the route middlewares.
                 ...$this->appMiddlewares->all(),
                 new ExecuteRouteMiddlewares,
@@ -90,7 +87,7 @@ final class Quill extends Router implements ApplicationInterface
     /**
      * Set essential settings for the operation of the application
      *
-     * @throws FileNotFoundException
+     * @throws Exception
      */
     private function boot(): void
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Quill\ErrorHandler;
 
 use Quill\Enums\Http\HttpCode;

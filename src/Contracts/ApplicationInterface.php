@@ -6,7 +6,7 @@ namespace Quill\Contracts;
 
 use Closure;
 use Psr\Http\Server\MiddlewareInterface;
-use Quill\Contracts\ErrorHandler\ErrorHandlerInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Quill\Contracts\Router\RouterInterface;
 
 /** @mixin RouterInterface */
@@ -15,10 +15,10 @@ interface ApplicationInterface
     /**
      * Use the specified error handler
      *
-     * @param ErrorHandlerInterface $errorHandler
+     * @param RequestHandlerInterface $errorHandler
      * @return ApplicationInterface
      */
-    public function setErrorHandler(ErrorHandlerInterface $errorHandler): ApplicationInterface;
+    public function setErrorHandler(RequestHandlerInterface $errorHandler): ApplicationInterface;
 
     /**
      * Register a new global middleware

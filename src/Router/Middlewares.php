@@ -1,6 +1,6 @@
 <?php
 
-namespace Quill\Support\Traits;
+namespace Quill\Router;
 
 use Closure;
 use Psr\Http\Server\MiddlewareInterface;

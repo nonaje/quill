@@ -10,7 +10,7 @@ interface RouteStoreInterface
 {
     public function add(Route $route): RouteInterface;
 
-    public function reset(): RouteStoreInterface;
+    public function clear(): RouteStoreInterface;
 
     public function addGroup(RouteGroupInterface $group): RouteGroupInterface;
 

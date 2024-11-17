@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace Quill\Support\PathFinder;
 
+use Exception;
 use Quill\Contracts\Support\PathResolverInterface;
-use Quill\Exceptions\FileNotFoundException;
+use Quill\Enums\Http\HttpCode;
 
-/**
- *
- */
 class Path implements PathResolverInterface
 {
     protected static string $appPath;
 
+    /**
+     * @throws Exception
+     */
     public static function setApplicationPath(string $path): void
     {
         if (! file_exists($path)) {
-            throw new FileNotFoundException($path);
+            throw new Exception('The specified application path does not exist', HttpCode::SERVER_ERROR->value);
         }
 
         static::$appPath = $path;

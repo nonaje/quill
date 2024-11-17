@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Quill\Contracts\Router;
 
 use Closure;
-use Psr\Http\Server\MiddlewareInterface;
 use Quill\Router\Route;
 
 /**
@@ -19,7 +18,7 @@ use Quill\Router\Route;
 interface RouterInterface
 {
     /**
-     * Register a new routes group
+     * Register a new routes group.
      *
      * @param string $prefix
      * @param Closure $routes
@@ -36,4 +35,11 @@ interface RouterInterface
      * @return RouteInterface[]
      */
     public function routes(): array;
+
+    /**
+     * Delete all registered routes, including groups.
+     *
+     * @return void
+     */
+    public function clear(): void;
 }

@@ -25,6 +25,11 @@ class Router implements RouterInterface
         return $this->routes->all();
     }
 
+    public function clear(): void
+    {
+        $this->routes->clear();
+    }
+
     /** @inheritDoc */
     public function group(string $prefix, Closure $routes): RouteGroupInterface
     {

@@ -6,7 +6,6 @@ namespace Quill\Loaders;
 
 use Quill\Contracts\Configuration\ConfigurationInterface;
 use Quill\Contracts\Loader\FilesLoader;
-use Quill\Exceptions\FileNotFoundException;
 use Quill\Support\PathFinder\Path;
 use Quill\Support\Traits\Singleton;
 
