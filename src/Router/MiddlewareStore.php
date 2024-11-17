@@ -44,6 +44,6 @@ final class MiddlewareStore implements MiddlewareStoreInterface
      */
     public function all(): array
     {
-        return array_flatten($this->stack);
+        return $this->stack;
     }
 }

@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Quill\Contracts\Request\RequestInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Enums\Http\HttpMethod;
+use Quill\Enums\RequestAttribute;
 use Quill\Support\Traits\Singleton;
 
 class Request implements RequestInterface
@@ -49,7 +50,7 @@ class Request implements RequestInterface
 
     private function getRoute(): RouteInterface
     {
-        return $this->getPsrRequest()->getAttribute('route');
+        return $this->getPsrRequest()->getAttribute(RequestAttribute::ROUTE->value);
     }
 
     private function json(string $key, mixed $default): mixed

@@ -2,23 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Quill\Links;
+namespace Quill\Lifecycle;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Quill\Contracts\Router\RouteInterface;
+use Quill\Enums\RequestAttribute;
 use Quill\Router\Route;
 
-final class ResolveRouteParameters implements MiddlewareInterface
+final class RouteParametersMiddleware implements MiddlewareInterface
 {
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var RouteInterface $route */
-        $route = $request->getAttribute('route');
+        $route = $request->getAttribute(RequestAttribute::ROUTE->value);
 
-        $request = $request->withAttribute('route', new Route(
+        $request = $request->withAttribute(RequestAttribute::ROUTE->value, new Route(
             uri: $route->uri(),
             method: $route->method(),
             target: $route->target(),

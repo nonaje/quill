@@ -77,6 +77,12 @@ class Config implements ConfigurationInterface
         return $this;
     }
 
+    /**
+     * Convert the dot notation key into an array
+     *
+     * @param string $key
+     * @return array
+     */
     private function fromDotNotationToArray(string $key): array
     {
         $key = strtolower($key);

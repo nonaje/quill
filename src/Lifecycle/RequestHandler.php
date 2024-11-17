@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Quill\Links;
+namespace Quill\Lifecycle;
 
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,11 +10,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Quill\Contracts\Request\RequestInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Contracts\Response\ResponseInterface;
+use Quill\Enums\RequestAttribute;
 use Quill\Factory\QuillRequestFactory;
 use Quill\Factory\QuillResponseFactory;
 use LogicException;
 
-final readonly class ExecuteRouteTarget implements RequestHandlerInterface
+final readonly class RequestHandler implements RequestHandlerInterface
 {
     private ResponseInterface       $response;
     private RequestInterface        $request;
@@ -22,7 +23,7 @@ final readonly class ExecuteRouteTarget implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): PsrResponseInterface
     {
-        $this->route = $request->getAttribute('route');
+        $this->route = $request->getAttribute(RequestAttribute::ROUTE->value);
         $this->response = QuillResponseFactory::createQuillResponse();
         $this->request = QuillRequestFactory::createFromPsrRequest($request);
 

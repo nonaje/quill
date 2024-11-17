@@ -17,9 +17,7 @@ class RequestHandlerFactory
             public function __construct(
                 private MiddlewareInterface $middleware,
                 private RequestHandlerInterface $handler
-            )
-            {
-            }
+            ) { }
 
             public function handle(ServerRequestInterface $request): ResponseInterface
             {

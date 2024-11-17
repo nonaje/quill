@@ -6,7 +6,7 @@ namespace Quill\Contracts;
 
 use Closure;
 use Psr\Http\Server\MiddlewareInterface;
-use Quill\Contracts\Handler\ErrorHandlerInterface;
+use Quill\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Quill\Contracts\Router\RouterInterface;
 
 /** @mixin RouterInterface */
@@ -31,7 +31,7 @@ interface ApplicationInterface
     /**
      * This function should be called after registering the global middlewares and routes.
      *
-     * Starts the application by sending the request through all the middlewares and returning the response to the client.
+     * Starts the application by sending the request through all the middlewares and returning the final response to the client.
      *
      * @return void
      */

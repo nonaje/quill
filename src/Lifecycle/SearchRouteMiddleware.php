@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Quill\Links;
+namespace Quill\Lifecycle;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Contracts\Router\RouterInterface;
+use Quill\Enums\RequestAttribute;
 use Quill\Exceptions\Http\RouteNotFound;
 use Psr\Http\Message\ResponseInterface;
 
-final readonly class IdentifySearchedRoute implements MiddlewareInterface
+final readonly class SearchRouteMiddleware implements MiddlewareInterface
 {
     public function __construct(private RouterInterface $router) { }
 
@@ -23,7 +24,7 @@ final readonly class IdentifySearchedRoute implements MiddlewareInterface
     {
         $route = $this->foundRouteOrKill($request);
 
-        $request = $request->withAttribute('route', $route);
+        $request = $request->withAttribute(RequestAttribute::ROUTE->value, $route);
 
         return $handler->handle($request);
     }

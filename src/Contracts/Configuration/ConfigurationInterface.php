@@ -35,12 +35,11 @@ interface ConfigurationInterface
 
     /**
      * Stores the value in the specified key, if the key already exists
-     * then an array will be created on that key storing both values.
+     * then an array will be created on that key storing the values.
      *
      * @param string $key
      * @param mixed $value
      * @return self
      */
     public function push(string $key, mixed $value): self;
-
 }
