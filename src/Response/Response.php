@@ -10,8 +10,8 @@ use Quill\Enums\Http\HttpCode;
 use Quill\Enums\Http\HttpHeader;
 use Quill\Enums\Http\MimeType;
 use Quill\Factory\Psr7\Psr7Factory;
-use Quill\Support\PathFinder\Path;
-use Quill\Support\Traits\Singleton;
+use Quill\Support\Path;
+use Quill\Support\Singleton;
 
 class Response implements ResponseInterface
 {

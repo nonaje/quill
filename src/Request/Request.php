@@ -9,7 +9,7 @@ use Quill\Contracts\Request\RequestInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Enums\Http\HttpMethod;
 use Quill\Enums\RequestAttribute;
-use Quill\Support\Traits\Singleton;
+use Quill\Support\Singleton;
 
 class Request implements RequestInterface
 {

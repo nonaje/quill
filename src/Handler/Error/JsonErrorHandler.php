@@ -2,18 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Quill\ErrorHandler;
+namespace Quill\Handler\Error;
 
 use Quill\Enums\Http\HttpCode;
 use Quill\Contracts\Response\ResponseInterface;
 
 class JsonErrorHandler extends ErrorHandler
 {
-    protected function __construct(protected ResponseInterface $response)
-    {
-        parent::__construct();
-    }
-
     /** @ineritDoc */
     protected function toResponse(): ResponseInterface
     {

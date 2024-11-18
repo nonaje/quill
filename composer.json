@@ -11,7 +11,9 @@
         "psr-4": {
             "Quill\\": "src/"
         },
-        "files": ["src/Support/Helpers/GlobalFunctions.php"]
+        "files": [
+          "src/Support/GlobalFunctions.php"
+        ]
     },
     "require": {
         "psr/http-message": "^2.0",

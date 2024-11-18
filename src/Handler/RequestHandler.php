@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Quill\Lifecycle;
+namespace Quill\Handler;
 
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

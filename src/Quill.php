@@ -9,22 +9,22 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Quill\Config\Config;
 use Quill\Contracts\ApplicationInterface;
-use Quill\Contracts\Lifecycle\LifecyclePipelineInterface;
+use Quill\Contracts\Middleware\MiddlewarePipelineInterface;
 use Quill\Contracts\Response\ResponseSenderInterface;
 use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteStoreInterface;
 use Quill\Factory\Psr7\Psr7Factory;
 use Quill\Factory\QuillResponseFactory;
-use Quill\Lifecycle\ExecuteRouteMiddlewares;
-use Quill\Lifecycle\RequestHandler;
-use Quill\Lifecycle\ExceptionHandlingMiddleware;
-use Quill\Lifecycle\FindRouteMiddleware;
+use Quill\Middleware\ExecuteRouteMiddlewares;
+use Quill\Handler\RequestHandler;
+use Quill\Middleware\ExceptionHandlingMiddleware;
+use Quill\Middleware\FindRouteMiddleware;
 use Quill\Loaders\ConfigurationFilesLoader;
 use Quill\Loaders\DotEnvLoader;
 use Quill\Loaders\RouteFilesLoader;
 use Quill\Router\Router;
-use Quill\Support\PathFinder\Path;
-use Quill\Support\Traits\Singleton;
+use Quill\Support\Path;
+use Quill\Support\Singleton;
 
 final class Quill extends Router implements ApplicationInterface
 {
@@ -35,13 +35,13 @@ final class Quill extends Router implements ApplicationInterface
      */
     protected function __construct(
         // Quill properties
-        private RequestHandlerInterface             $errorHandler,
-        private readonly MiddlewareStoreInterface   $appMiddlewares,
-        private readonly LifecyclePipelineInterface $lifecycle,
-        private readonly ResponseSenderInterface    $response,
+        private RequestHandlerInterface              $errorHandler,
+        private readonly MiddlewareStoreInterface    $appMiddlewares,
+        private readonly MiddlewarePipelineInterface $middlewarePipeline,
+        private readonly ResponseSenderInterface     $response,
 
         // Router properties
-        RouteStoreInterface                         $routeStore,
+        RouteStoreInterface                          $routeStore,
     ) {
         parent::__construct($routeStore);
 
@@ -69,14 +69,16 @@ final class Quill extends Router implements ApplicationInterface
     {
         $request = Psr7Factory::createPsr7ServerRequest();
 
-        $response = $this->lifecycle
+        $response = $this->middlewarePipeline
             ->send($request)
             ->through([
                 new ExceptionHandlingMiddleware($this->errorHandler),
                 new FindRouteMiddleware($this),
                 // Run user-defined global middlewares before the route middlewares.
                 ...$this->appMiddlewares->all(),
-                new ExecuteRouteMiddlewares,
+                new ExecuteRouteMiddlewares(
+                    new $this->middlewarePipeline
+                ),
             ])
             ->to(new RequestHandler)
             ->getResponse();

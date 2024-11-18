@@ -6,8 +6,8 @@ namespace Quill\Loaders;
 
 use Quill\Contracts\Configuration\ConfigurationInterface;
 use Quill\Contracts\Loader\FilesLoader;
-use Quill\Support\PathFinder\Path;
-use Quill\Support\Traits\Singleton;
+use Quill\Support\Path;
+use Quill\Support\Singleton;
 
 final class ConfigurationFilesLoader implements FilesLoader
 {

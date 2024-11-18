@@ -1,6 +1,6 @@
 <?php
 
-namespace Quill\Support\Traits;
+namespace Quill\Support;
 
 use Exception;
 

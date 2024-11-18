@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Quill\Config;
 
 use Quill\Contracts\Configuration\ConfigurationInterface;
-use Quill\Support\Traits\Singleton;
+use Quill\Support\DotNotationParser;
+use Quill\Support\Singleton;
 
 class Config implements ConfigurationInterface
 {
-    use Singleton;
+    use Singleton, DotNotationParser;
 
     private array $items = [];
 
@@ -22,7 +23,7 @@ class Config implements ConfigurationInterface
     /** @inheritDoc */
     public function get(string $key, mixed $default = null): mixed
     {
-        foreach ($this->fromDotNotationToArray($key) as $key) {
+        foreach ($this->dotNotationToArray($key) as $key) {
             $value = $this->items[$key] ?? $value[$key] ?? null;
 
             if (is_null($value)) return $default;
@@ -36,7 +37,7 @@ class Config implements ConfigurationInterface
     {
         $items = &$this->items;
 
-        foreach ($this->fromDotNotationToArray($key) as $key) {
+        foreach ($this->dotNotationToArray($key) as $key) {
             if (!isset($items[$key])) {
                 $items[$key] = null;
             }
@@ -64,7 +65,7 @@ class Config implements ConfigurationInterface
     {
         $items = &$this->items;
 
-        foreach ($this->fromDotNotationToArray($key) as $key) {
+        foreach ($this->dotNotationToArray($key) as $key) {
             if (!isset($items[$key]) || !is_array($items[$key])) {
                 $items[$key] = [];
             }
@@ -75,17 +76,5 @@ class Config implements ConfigurationInterface
         $items = $value;
 
         return $this;
-    }
-
-    /**
-     * Convert the dot notation key into an array
-     *
-     * @param string $key
-     * @return array
-     */
-    private function fromDotNotationToArray(string $key): array
-    {
-        $key = strtolower($key);
-        return array_values(array_filter(explode('.', $key))) ?: [$key];
     }
 }

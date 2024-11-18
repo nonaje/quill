@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Quill\Factory;
 
-use Quill\ErrorHandler\JsonErrorHandler;
-use Quill\LifecyclePipeline;
+use Quill\Handler\Error\JsonErrorHandler;
+use Quill\Handler\MiddlewarePipelineHandler;
 use Quill\Quill;
 use Quill\Response\ResponseSender;
 use Quill\Router\MiddlewareStore;
@@ -19,7 +19,7 @@ final class QuillFactory
             appMiddlewares: new MiddlewareStore,
             routeStore: new RouteStore,
             errorHandler: JsonErrorHandler::make(QuillResponseFactory::createQuillResponse()),
-            lifecycle: LifecyclePipeline::make(),
+            middlewarePipeline: new MiddlewarePipelineHandler,
             response: ResponseSender::make(),
         );
     }

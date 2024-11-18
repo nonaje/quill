@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Quill\Support\PathFinder;
+namespace Quill\Support;
 
 use Exception;
 use Quill\Contracts\Support\PathResolverInterface;
@@ -12,11 +12,11 @@ class Path implements PathResolverInterface
 {
     protected static string $appPath;
 
-    /**
-     * @throws Exception
-     */
+    /** @ineritDoc  */
     public static function setApplicationPath(string $path): void
     {
+        $path = self::normalize($path);
+
         if (! file_exists($path)) {
             throw new Exception('The specified application path does not exist', HttpCode::SERVER_ERROR->value);
         }
@@ -24,31 +24,41 @@ class Path implements PathResolverInterface
         static::$appPath = $path;
     }
 
-    public static function toConfig(string $filename = ''): string
-    {
-        return self::toFile('config') . self::normalizeFilename($filename);
-    }
-
+    /** @ineritDoc  */
     public static function toFile(string $filename = ''): string
     {
-        return static::$appPath . self::normalizeFilename($filename);
+        return static::$appPath . self::normalize($filename);
     }
 
+    /** @ineritDoc  */
+    public static function toConfig(string $filename = ''): string
+    {
+        return Path::toFile('config') . self::normalize($filename);
+    }
+
+    /** @ineritDoc  */
     public static function toRoute(string $filename = ''): string
     {
-        return self::toFile('routes') . self::normalizeFilename($filename);
+        return Path::toFile('routes') . self::normalize($filename);
     }
 
+    /** @ineritDoc  */
     public static function toHtml(string $filename = ''): string
     {
         if (! str_ends_with($filename, '.html')) {
             $filename .= '.html';
         }
 
-        return self::toFile('views') . self::normalizeFilename($filename);
+        return Path::toFile('views') . self::normalize($filename);
     }
 
-    protected static function normalizeFilename(string $filename): string
+    /**
+     * Removes the slashes in the file name and adds the slash to the beginning to make sure it is a valid path
+     *
+     * @param string $filename
+     * @return string
+     */
+    protected static function normalize(string $filename): string
     {
         $filename = trim($filename, '/');
 

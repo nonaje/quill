@@ -7,8 +7,8 @@ namespace Quill\Loaders;
 use InvalidArgumentException;
 use Quill\Contracts\Configuration\ConfigurationInterface;
 use Quill\Contracts\Loader\FilesLoader;
-use Quill\Support\PathFinder\Path;
-use Quill\Support\Traits\Singleton;
+use Quill\Support\Path;
+use Quill\Support\Singleton;
 
 final class DotEnvLoader implements FilesLoader
 {

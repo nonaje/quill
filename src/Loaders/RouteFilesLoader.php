@@ -4,8 +4,8 @@ namespace Quill\Loaders;
 
 use Quill\Contracts\Loader\FilesLoader;
 use Quill\Contracts\Router\RouterInterface;
-use Quill\Support\PathFinder\Path;
-use Quill\Support\Traits\Singleton;
+use Quill\Support\Path;
+use Quill\Support\Singleton;
 
 class RouteFilesLoader implements FilesLoader
 {

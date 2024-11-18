@@ -2,26 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Quill;
+namespace Quill\Handler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Quill\Support\Traits\Singleton;
-use Quill\Contracts\Lifecycle\LifecyclePipelineInterface;
+use Quill\Contracts\Middleware\MiddlewarePipelineInterface;
 
-final class LifecyclePipeline implements RequestHandlerInterface, LifecyclePipelineInterface
+final class MiddlewarePipelineHandler implements RequestHandlerInterface, MiddlewarePipelineInterface
 {
-    use Singleton;
-
     private ServerRequestInterface $request;
     private RequestHandlerInterface $handler;
 
     /** @var MiddlewareInterface[] $middlewares */
     private array $middlewares;
 
-    public function send(ServerRequestInterface $request): LifecyclePipelineInterface
+    /** @ineritDoc  */
+    public function send(ServerRequestInterface $request): MiddlewarePipelineInterface
     {
         $this->request = $request;
 
@@ -29,23 +27,22 @@ final class LifecyclePipeline implements RequestHandlerInterface, LifecyclePipel
     }
 
     /** @inheritDoc */
-    public function through(array $middlewares): LifecyclePipelineInterface
+    public function through(array $middlewares): MiddlewarePipelineInterface
     {
         $this->middlewares = $middlewares;
 
         return $this;
     }
 
-    public function to(RequestHandlerInterface $handler): LifecyclePipelineInterface
+    /** @inheritDoc */
+    public function to(RequestHandlerInterface $handler): MiddlewarePipelineInterface
     {
         $this->handler = $handler;
 
         return $this;
     }
 
-    /**
-     * @return ResponseInterface
-     */
+    /** @ineritDoc  */
     public function getResponse(): ResponseInterface
     {
         return $this->handle($this->request);
