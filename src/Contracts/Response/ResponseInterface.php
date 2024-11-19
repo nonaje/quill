@@ -25,7 +25,7 @@ interface ResponseInterface
     public function code(HttpCode $code): ResponseInterface;
 
     /**
-     * Set the response body as a Json
+     * Set the response body as Json
      *
      * @param array $data
      * @return ResponseInterface
@@ -33,7 +33,7 @@ interface ResponseInterface
     public function json(array $data): ResponseInterface;
 
     /**
-     * Set the response body as a plain text
+     * Set the response body as plain text
      *
      * @param string $plain
      * @return ResponseInterface
@@ -42,9 +42,6 @@ interface ResponseInterface
 
     /**
      * Set the response body as HTML
-     *
-     * This function can receive the HTML text or
-     * the name of the file inside the 'views' folder, ending with .html or not
      *
      * @param string $html
      * @return ResponseInterface

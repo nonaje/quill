@@ -19,7 +19,7 @@ final class ConfigurationFilesLoader implements FilesLoader
 
     public function load(string ...$filenames): void
     {
-        $configurationPath = Path::toConfig();
+        $configurationPath = Path::toFile('config');
         $filename ??= $configurationPath;
 
         if (is_file($filename)) {

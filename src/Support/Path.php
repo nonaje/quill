@@ -30,28 +30,6 @@ class Path implements PathResolverInterface
         return static::$appPath . self::normalize($filename);
     }
 
-    /** @ineritDoc  */
-    public static function toConfig(string $filename = ''): string
-    {
-        return Path::toFile('config') . self::normalize($filename);
-    }
-
-    /** @ineritDoc  */
-    public static function toRoute(string $filename = ''): string
-    {
-        return Path::toFile('routes') . self::normalize($filename);
-    }
-
-    /** @ineritDoc  */
-    public static function toHtml(string $filename = ''): string
-    {
-        if (! str_ends_with($filename, '.html')) {
-            $filename .= '.html';
-        }
-
-        return Path::toFile('views') . self::normalize($filename);
-    }
-
     /**
      * Removes the slashes in the file name and adds the slash to the beginning to make sure it is a valid path
      *

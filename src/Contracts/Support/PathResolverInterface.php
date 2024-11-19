@@ -25,28 +25,4 @@ interface PathResolverInterface
      * @return string
      */
     public static function toFile(string $filename): string;
-
-    /**
-     * Returns the absolute path to a file inside the "config" folder in the root path of the application.
-     *
-     * @param string $filename
-     * @return string
-     */
-    public static function toConfig(string $filename): string;
-
-    /**
-     * Returns the absolute path to a file inside the "routes" folder in the root path of the application.
-     *
-     * @param string $filename
-     * @return string
-     */
-    public static function toRoute(string $filename): string;
-
-    /**
-     * Returns the absolute path to a file inside the "views" folder in the root path of the application.
-     *
-     * @param string $filename
-     * @return string
-     */
-    public static function toHtml(string $filename): string;
 }

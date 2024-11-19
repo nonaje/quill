@@ -27,10 +27,9 @@ final readonly class FindRouteMiddleware implements MiddlewareInterface
      *
      * @throws Exception
      *
-     * @param ServerRequestInterface $request The incoming server request.
-     * @param RequestHandlerInterface $handler The request handler to process the request.
-     *
-     * @return ResponseInterface The response generated after handling the request.
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -63,7 +62,7 @@ final readonly class FindRouteMiddleware implements MiddlewareInterface
             $this->router->clear();
 
             return new Route(
-                uri: $route->uri(),
+                uri: $route->path(),
                 method: $route->method(),
                 target: $route->target(),
                 middlewares: $route->getMiddlewares(),
@@ -94,7 +93,7 @@ final readonly class FindRouteMiddleware implements MiddlewareInterface
             return [false, []];
         }
 
-        $routeParts = array_values(array_filter(explode('/', $route->uri())));
+        $routeParts = array_values(array_filter(explode('/', $route->path())));
         $wantedParts = array_values(array_filter(explode('/', $request->getUri()->getPath())));
 
         // Check if the number of URI segments match

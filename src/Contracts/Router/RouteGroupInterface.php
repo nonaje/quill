@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Quill\Contracts\Router;
 
-use Closure;
-use Psr\Http\Server\MiddlewareInterface;
-
-interface RouteGroupInterface
+interface RouteGroupInterface extends MiddlewaresInterface
 {
-    /** @return RouteInterface[] */
+    /**
+     * Returns all routes registered within the group.
+     *
+     * The routes within groups are "compiled" and returned as particular routes
+     * with their full path and the middlewares, both individual and those inherited by the group.
+     *
+     * @return RouteInterface[]
+     */
     public function routes(): array;
-
-    public function middleware(string|array|Closure|MiddlewareInterface $middleware): static;
-
-    public function getMiddlewares(): MiddlewareStoreInterface;
 }

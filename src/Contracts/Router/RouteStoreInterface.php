@@ -4,39 +4,38 @@ declare(strict_types=1);
 
 namespace Quill\Contracts\Router;
 
-use Quill\Router\Route;
-
 interface RouteStoreInterface
 {
-    public function add(Route $route): RouteInterface;
+    /**
+     * Adds a new route to the store.
+     *
+     * @param RouteInterface $route
+     * @return RouteInterface
+     */
+    public function add(RouteInterface $route): RouteInterface;
 
-    public function clear(): RouteStoreInterface;
+    /**
+     * Clears all stored routes and route groups.
+     *
+     * @return void
+     */
+    public function clear(): void;
 
+    /**
+     * Adds a new route group to the store.
+     *
+     * @param RouteGroupInterface $group
+     * @return RouteGroupInterface
+     */
     public function addGroup(RouteGroupInterface $group): RouteGroupInterface;
 
-    public function update(Route $route): bool;
-
-    public function setMatchedRoute(Route $route): self;
-
-    public function getMatchedRoute(): RouteInterface;
-
     /**
-     * @return array<empty, empty>|RouteInterface[]
-     */
-    public function routes(): array;
-
-    /**
-     * @return array<empty, empty>|RouteGroupInterface[]
-     */
-    public function groups(): array;
-
-    /**
-     * Sum of the routes and the groups' routes
-     * Returns a single level array
+     * Retrieves all compiled routes, including those within groups.
      *
-     * @return array<empty, empty>|RouteInterface[]
+     * The routes from groups are expanded with their full paths and middlewares,
+     * combining both individual and inherited middlewares from their groups.
+     *
+     * @return RouteInterface[]
      */
     public function all(): array;
-
-    public function count(): int;
 }

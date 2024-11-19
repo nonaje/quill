@@ -18,14 +18,12 @@ final readonly class ExceptionHandlingMiddleware implements MiddlewareInterface
     /**
      * Processes an incoming server request and returns a response, handling exceptions.
      *
-     * This method allows the middleware to pass the request to the next handler in the chain.
      * If an exception is thrown during the request handling, it catches the exception and
-     * forwards the request to the configured error handler, adding the exception as an attribute
-     * to the request for further processing.
+     * forwards the request with the 'ERROR' parameter to the configured error handler.
      *
-     * @param ServerRequestInterface $request The incoming server request.
-     * @param RequestHandlerInterface $handler The request handler to process the request.
-     * @return ResponseInterface The generated response after handling the request or the error.
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

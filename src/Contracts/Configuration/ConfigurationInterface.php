@@ -31,7 +31,7 @@ interface ConfigurationInterface
      * @param mixed $value
      * @return self
      */
-    public function put(string $key, mixed $value): self;
+    public function put(string $key, mixed $value): ConfigurationInterface;
 
     /**
      * Stores the value in the specified key, if the key already exists
@@ -41,5 +41,5 @@ interface ConfigurationInterface
      * @param mixed $value
      * @return self
      */
-    public function push(string $key, mixed $value): self;
+    public function push(string $key, mixed $value): ConfigurationInterface;
 }

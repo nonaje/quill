@@ -93,8 +93,13 @@ final class Quill extends Router implements ApplicationInterface
      */
     private function boot(): void
     {
+        // The "up" function is called automatically when the route registration
+        // and general configuration of the application is completed.
+        // Normally at the end of the execution of the "index.php" script
+         register_shutdown_function(fn () => $this->up());
+
         // Override PHP's default error handler
-        set_error_handler([$this->errorHandler, 'handleError']);
+        set_error_handler([$this->errorHandler, 'handleError'], E_ALL);
 
         // Set the root directory of the application
         Path::setApplicationPath(dirname(__DIR__, 4));

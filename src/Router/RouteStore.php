@@ -10,14 +10,13 @@ use Quill\Contracts\Router\RouteStoreInterface;
 
 class RouteStore implements RouteStoreInterface
 {
-    private null|Route $matchedRoute = null;
-
-    /** @var array<empty, empty>|RouteInterface[] $routes */
+    /** @var RouteInterface[] $routes */
     private array $routes = [];
 
-    /** @var array<empty, empty>|RouteGroupInterface[] $routes */
+    /** @var RouteGroupInterface[] $routes */
     private array $groups = [];
 
+    /** @ineritDoc  */
     public function add(RouteInterface $route): RouteInterface
     {
         $this->routes[] = $route;
@@ -25,6 +24,7 @@ class RouteStore implements RouteStoreInterface
         return $route;
     }
 
+    /** @ineritDoc  */
     public function addGroup(RouteGroupInterface $group): RouteGroupInterface
     {
         $this->groups[] = $group;
@@ -32,76 +32,30 @@ class RouteStore implements RouteStoreInterface
         return $group;
     }
 
-    public function update(RouteInterface $route): bool
-    {
-        $index = $this->find($route);
-
-        if (is_integer($index)) {
-            $this->routes[$index] = $route;
-        }
-
-        return is_integer($index);
-    }
-
-    private function find(RouteInterface $searched): null|int
-    {
-        foreach ($this->all() as $key => $route) {
-            if ($route->method() === $searched->method() && $route->uri() === $searched->uri()) {
-                return $key;
-            }
-        }
-
-        return null;
-    }
-
+    /** @ineritDoc  */
     public function all(): array
     {
-        return array_merge($this->routes(), $this->resolveGroupsRoutes());
+        return array_merge($this->routes, $this->resolveGroupsRoutes());
     }
 
-    public function routes(): array
+    /** @ineritDoc  */
+    public function clear(): void
     {
-        return $this->routes;
+        $this->routes = [];
+        $this->groups = [];
     }
 
+    /**
+     * @return array
+     */
     private function resolveGroupsRoutes(): array
     {
         $routes = [];
 
-        foreach ($this->groups() as $group) {
+        foreach ($this->groups as $group) {
             $routes = array_merge($routes, $group->routes());
         }
 
         return $routes;
-    }
-
-    public function groups(): array
-    {
-        return $this->groups;
-    }
-
-    public function getMatchedRoute(): RouteInterface
-    {
-        return $this->matchedRoute;
-    }
-
-    public function setMatchedRoute(Route $route): RouteStoreInterface
-    {
-        $this->matchedRoute = $route;
-
-        return $this;
-    }
-
-    public function count(): int
-    {
-        return count($this->routes);
-    }
-
-    public function clear(): RouteStoreInterface
-    {
-        $this->routes = [];
-        $this->groups = [];
-
-        return $this;
     }
 }

@@ -18,10 +18,9 @@ final readonly class ExecuteRouteMiddlewares implements MiddlewareInterface
     /**
      * Processes the middlewares attached to the route
      *
-     * @param ServerRequestInterface $request The incoming server request.
-     * @param RequestHandlerInterface $handler The request handler to process the request.
-     *
-     * @return ResponseInterface The response generated after handling the request.
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {

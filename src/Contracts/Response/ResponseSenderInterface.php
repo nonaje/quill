@@ -6,5 +6,15 @@ namespace Quill\Contracts\Response;
 
 interface ResponseSenderInterface
 {
+    /**
+     * Sends the HTTP response to the client.
+     *
+     * This method must handle the HTTP headers and response body,
+     * ensuring that the output is properly transmitted to the HTTP client.
+     *
+     * @param ResponseInterface $response
+     *
+     * @return void
+     */
     public function send(ResponseInterface $response): void;
 }

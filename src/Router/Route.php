@@ -24,7 +24,7 @@ final readonly class Route implements RouteInterface
         $this->assert();
     }
 
-    public function uri(): string
+    public function path(): string
     {
         return $this->uri;
     }

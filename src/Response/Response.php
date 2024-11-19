@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Quill\Response;
 
+use Exception;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Quill\Contracts\Response\ResponseInterface;
 use Quill\Enums\Http\HttpCode;
@@ -26,7 +27,7 @@ class Response implements ResponseInterface
     }
 
     /** @inheritDoc */
-    public function plain(string $plain): self
+    public function plain(string $plain): ResponseInterface
     {
         return $this->setPsrResponse(
             $this->body($plain, MimeType::PLAIN_TEXT)
@@ -34,7 +35,7 @@ class Response implements ResponseInterface
     }
 
     /** @inheritDoc */
-    public function json(array $data): self
+    public function json(array $data): ResponseInterface
     {
         return $this->setPsrResponse(
             $this->body(json_encode($data), MimeType::JSON)
@@ -42,20 +43,32 @@ class Response implements ResponseInterface
     }
 
     /** @inheritDoc */
-    public function html(string $html): self
+    public function html(string $html): ResponseInterface
     {
-        //Checks if the received argument is the name of an html file inside the 'views' folder
-        if (file_exists($path = $html) || file_exists($path = Path::toHtml($html)) || file_exists($path = Path::toHtml($html . '.html'))) {
-            $html = file_get_contents($path);
-        }
-
         return $this->setPsrResponse(
             $this->body($html, MimeType::HTML)
         );
     }
 
+    /**
+     * @throws Exception
+     */
+    public function view(string $view): ResponseInterface
+    {
+        //Checks if the received argument is the name of a html file inside the 'views' folder
+        if (file_exists($path = $view) ||
+            file_exists($path = Path::toFile($view)) ||
+            file_exists($path = Path::toFile($view . '.html'))
+        ) {
+            $html = file_get_contents($path);
+            return $this->html($html);
+        }
+
+        throw new Exception('The view "' . $view . '" does not exist or is not readable.');
+    }
+
     /** @inheritDoc */
-    public function code(HttpCode $code): self
+    public function code(HttpCode $code): ResponseInterface
     {
         $response = $this->psrResponse->withStatus($code->value);
 
@@ -66,9 +79,9 @@ class Response implements ResponseInterface
      * Set the updated instance of the psr response
      *
      * @param PsrResponseInterface $response
-     * @return self
+     * @return ResponseInterface
      */
-    private function setPsrResponse(PsrResponseInterface $response): self
+    private function setPsrResponse(PsrResponseInterface $response): ResponseInterface
     {
         $this->psrResponse = $response;
 

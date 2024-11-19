@@ -15,7 +15,7 @@ class RouteFilesLoader implements FilesLoader
 
     public function load(string ...$filenames): void
     {
-        $routesPath = Path::toRoute();
+        $routesPath = Path::toFile('routes');
 
         if (is_dir($routesPath)) {
             $routesFiles = scandir($routesPath);

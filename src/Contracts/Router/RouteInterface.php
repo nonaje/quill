@@ -5,20 +5,37 @@ declare(strict_types=1);
 namespace Quill\Contracts\Router;
 
 use Closure;
-use Psr\Http\Server\MiddlewareInterface;
 use Quill\Enums\Http\HttpMethod;
 
-interface RouteInterface
+interface RouteInterface extends MiddlewaresInterface
 {
-    public function middleware(string|array|Closure|MiddlewareInterface $middleware): static;
+    /**
+     * Gets the path associated with this route.
+     *
+     * @return string The URI path for the route (e.g., "/users/{id}").
+     */
+    public function path(): string;
 
-    public function uri(): string;
-
+    /**
+     * Gets the HTTP method associated with this route.
+     *
+     * @return HttpMethod
+     */
     public function method(): HttpMethod;
 
+    /**
+     * Gets the target handler for this route.
+     *
+     * The target defines the action to be executed when the route matches.
+     *
+     * @return Closure|array|string The route's target handler.
+     */
     public function target(): Closure|array|string;
 
+    /**
+     * Gets the parameters extracted from the route's path.
+     *
+     * @return array An associative array of route parameters (e.g., ['id' => 42]).
+     */
     public function params(): array;
-
-    public function getMiddlewares(): MiddlewareStoreInterface;
 }

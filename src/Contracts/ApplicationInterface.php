@@ -9,11 +9,19 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Quill\Contracts\Router\RouterInterface;
 
-/** @mixin RouterInterface */
+/**
+ * Represents the core application interface that manages global middleware, error handling,
+ * and the overall lifecycle of the application. Acts as a mixin for the RouterInterface, allowing
+ * routing functionality to be integrated seamlessly.
+ *
+ * @mixin RouterInterface
+ */
 interface ApplicationInterface
 {
     /**
-     * Use the specified error handler
+     * Sets a custom error handler for the application.
+     *
+     * The error handler is invoked when an exception or error occurs during request processing.
      *
      * @param RequestHandlerInterface $errorHandler
      * @return ApplicationInterface
@@ -21,7 +29,7 @@ interface ApplicationInterface
     public function setErrorHandler(RequestHandlerInterface $errorHandler): ApplicationInterface;
 
     /**
-     * Register a new global middleware
+     * Registers a new global middleware to be executed on every request.
      *
      * @param string|array|Closure|MiddlewareInterface $middleware
      * @return ApplicationInterface
@@ -29,9 +37,12 @@ interface ApplicationInterface
     public function use(string|array|Closure|MiddlewareInterface $middleware): ApplicationInterface;
 
     /**
-     * This function should be called after registering the global middlewares and routes.
+     * Boots the application.
      *
-     * Starts the application by sending the request through all the middlewares and returning the final response to the client.
+     * This method initializes the application, processing the incoming request through
+     * all registered global and route middlewares, and sends the final response to the client.
+     *
+     * It should be called after registering all global middlewares and routes.
      *
      * @return void
      */
