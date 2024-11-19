@@ -5,10 +5,12 @@
 **This is a development version of the Framework, use at your own risk.**
 
 ## Quill
+
 A simple way to make lightweight PHP APIs
 
-## Installation 
-The recommended way to install Quill is through 
+## Installation
+
+The recommended way to install Quill is through
 [Composer](https://getcomposer.org/).
 
 ```bash
@@ -16,6 +18,7 @@ composer require nonaje/quill
 ```
 
 ## Basic Usage
+
 We can use Quill with a syntax similar to [Express.Js](https://expressjs.com/)
 
 ```php

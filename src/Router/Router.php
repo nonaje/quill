@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Quill\Router;
 
-use \Closure;
+use Closure;
 use LogicException;
 use Quill\Contracts\Router\RouteGroupInterface;
 use Quill\Contracts\Router\RouteInterface;
@@ -15,9 +15,10 @@ use Quill\Enums\Http\HttpMethod;
 class Router implements RouterInterface
 {
     protected function __construct(
-        private readonly RouteStoreInterface        $routes,
-        private readonly string                     $prefix = ''
-    ) { }
+        private readonly RouteStoreInterface $routes,
+        private readonly string $prefix = ''
+    ) {
+    }
 
     /** @inheritDoc */
     public function routes(): array
@@ -35,15 +36,17 @@ class Router implements RouterInterface
     {
         $prefix = $this->prefix . '/' . trim($prefix, '/');
 
-        return $this->routes->addGroup(new RouteGroup(
-            prefix: $prefix,
-            routes: $routes,
-            router: new self(
-                routes: new RouteStore,
-                prefix: $prefix
-            ),
-            middlewares: new MiddlewareStore(),
-        ));
+        return $this->routes->addGroup(
+            new RouteGroup(
+                prefix: $prefix,
+                routes: $routes,
+                router: new self(
+                    routes: new RouteStore(),
+                    prefix: $prefix
+                ),
+                middlewares: new MiddlewareStore(),
+            )
+        );
     }
 
     /**
@@ -55,8 +58,8 @@ class Router implements RouterInterface
      */
     public function __call(string $method, array $arguments = []): RouteInterface
     {
-        if (! in_array(strtoupper($method), HttpMethod::values())) {
-            throw new LogicException("Undefined method " . self::class . "@$method");
+        if (!in_array(strtoupper($method), HttpMethod::values())) {
+            throw new LogicException('Undefined method ' . self::class . "@$method");
         }
 
         return $this->map(HttpMethod::from(strtoupper($method)), ...$arguments);
@@ -74,11 +77,13 @@ class Router implements RouterInterface
     {
         $uri = $this->prefix . '/' . trim($uri, '/');
 
-        return $this->routes->add(new Route(
-            uri: $uri,
-            method: $method,
-            target: $target,
-            middlewares: new MiddlewareStore(),
-        ));
+        return $this->routes->add(
+            new Route(
+                uri: $uri,
+                method: $method,
+                target: $target,
+                middlewares: new MiddlewareStore(),
+            )
+        );
     }
 }

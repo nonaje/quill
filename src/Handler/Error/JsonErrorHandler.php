@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Quill\Handler\Error;
 
-use Quill\Enums\Http\HttpCode;
 use Quill\Contracts\Response\ResponseInterface;
+use Quill\Enums\Http\HttpCode;
 
 class JsonErrorHandler extends ErrorHandler
 {

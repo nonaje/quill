@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Quill\Middleware;
 
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Psr\Http\Message\ResponseInterface;
 use Quill\Enums\RequestAttribute;
 use Throwable;
 
 final readonly class ExceptionHandlingMiddleware implements MiddlewareInterface
 {
-    public function __construct(private RequestHandlerInterface $errorHandler) { }
+    public function __construct(private RequestHandlerInterface $errorHandler)
+    {
+    }
 
     /**
      * Processes an incoming server request and returns a response, handling exceptions.

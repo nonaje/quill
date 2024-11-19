@@ -50,29 +50,9 @@ class Psr7Factory
         self::$streamFactory = $factory;
     }
 
-    public static function serverRequestFactory(): ServerRequestFactoryInterface
-    {
-        return self::$serverRequestFactory ?? new Psr17Factory;
-    }
-
-    public static function uriFactory(): UriFactoryInterface
-    {
-        return self::$uriFactory ?? new Psr17Factory;
-    }
-
-    public static function uploadedFileFactory(): UploadedFileFactoryInterface
-    {
-        return self::$uploadedFileFactory ?? new Psr17Factory;
-    }
-
-    public static function streamFactory(): StreamFactoryInterface
-    {
-        return self::$streamFactory ?? new Psr17Factory;
-    }
-
     public static function responseFactory(): ResponseFactoryInterface
     {
-        return self::$responseFactory ?? new Psr17Factory;
+        return self::$responseFactory ?? new Psr17Factory();
     }
 
     public static function createPsr7ServerRequest(): ServerRequestInterface
@@ -83,5 +63,25 @@ class Psr7Factory
             uploadedFileFactory: self::uploadedFileFactory(),
             streamFactory: self::streamFactory()
         ))->fromGlobals();
+    }
+
+    public static function serverRequestFactory(): ServerRequestFactoryInterface
+    {
+        return self::$serverRequestFactory ?? new Psr17Factory();
+    }
+
+    public static function uriFactory(): UriFactoryInterface
+    {
+        return self::$uriFactory ?? new Psr17Factory();
+    }
+
+    public static function uploadedFileFactory(): UploadedFileFactoryInterface
+    {
+        return self::$uploadedFileFactory ?? new Psr17Factory();
+    }
+
+    public static function streamFactory(): StreamFactoryInterface
+    {
+        return self::$streamFactory ?? new Psr17Factory();
     }
 }

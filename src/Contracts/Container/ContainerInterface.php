@@ -23,11 +23,11 @@ interface ContainerInterface extends \Psr\Container\ContainerInterface
      * A singleton is a service that will be resolved once and the same instance
      * will be returned on subsequent calls to the container.
      *
-     * @throws SingletonAlreadyRegisteredException
-     *
      * @param string $id
      * @param callable $resolver
      * @return ContainerInterface
+     * @throws SingletonAlreadyRegisteredException
+     *
      */
     public function singleton(string $id, callable $resolver): ContainerInterface;
 

@@ -25,7 +25,9 @@ class Config implements ConfigurationInterface
         foreach ($this->dotNotationToArray($key) as $key) {
             $value = $this->items[$key] ?? $value[$key] ?? null;
 
-            if (is_null($value)) return $default;
+            if (is_null($value)) {
+                return $default;
+            }
         }
 
         return $value ?? $default;

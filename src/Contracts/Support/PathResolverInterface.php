@@ -10,11 +10,11 @@ interface PathResolverInterface
 {
     /**
      * It sets the root application path
-     * 
-     * @throws Exception
      *
      * @param string $path
      * @return void
+     * @throws Exception
+     *
      */
     public static function setApplicationPath(string $path): void;
 

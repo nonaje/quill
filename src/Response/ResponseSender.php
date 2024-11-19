@@ -38,10 +38,13 @@ final class ResponseSender implements ResponseSenderInterface
             }
         }
 
-        header(sprintf('HTTP/%s %d',
-            $psrResponse->getProtocolVersion(),
-            $psrResponse->getStatusCode()
-        ));
+        header(
+            sprintf(
+                'HTTP/%s %d',
+                $psrResponse->getProtocolVersion(),
+                $psrResponse->getStatusCode()
+            )
+        );
     }
 
     private function sendBody(ResponseInterface $response): void

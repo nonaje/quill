@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Quill\Factory\Middleware;
 
 use LogicException;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 final readonly class StringClassMiddleware implements MiddlewareInterface
 {
@@ -19,7 +19,7 @@ final readonly class StringClassMiddleware implements MiddlewareInterface
 
     private function assert(): void
     {
-        $registeredMiddlewares = config("app.middlewares", []);
+        $registeredMiddlewares = config('app.middlewares', []);
         $middlewareIsNotRegistered = !in_array($this->middleware, $registeredMiddlewares);
         if ($middlewareIsNotRegistered) {
             throw new LogicException("Middleware: '{$this->middleware}' is not registered in app config");
@@ -34,7 +34,7 @@ final readonly class StringClassMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         /** @var MiddlewareInterface $middleware */
-        $middleware = new $this->middleware;
+        $middleware = new $this->middleware();
 
         return $middleware->process($request, $handler);
     }

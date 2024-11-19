@@ -15,8 +15,6 @@ use Throwable;
 
 abstract class ErrorHandler implements RequestHandlerInterface, ErrorHandlerInterface
 {
-    public function __construct(protected ResponseInterface $response) { }
-
     /**
      * The request instance that contains the error
      *
@@ -24,8 +22,9 @@ abstract class ErrorHandler implements RequestHandlerInterface, ErrorHandlerInte
      */
     protected ServerRequestInterface $request;
 
-    /** @ineritDoc  */
-    protected abstract function toResponse(): ResponseInterface;
+    public function __construct(protected ResponseInterface $response)
+    {
+    }
 
     /**
      * @inheritDoc
@@ -37,13 +36,21 @@ abstract class ErrorHandler implements RequestHandlerInterface, ErrorHandlerInte
         return $this->toResponse()->getPsrResponse();
     }
 
+    /** @ineritDoc */
+    abstract protected function toResponse(): ResponseInterface;
+
     /**
      * Convert a PHP generic error into an ErrorException and throw it to be caught by the ExceptionHandlingMiddleware
      *
      * @throws ErrorException
      */
-    public function handleError(int $code, string $message, string $file = null, int $line = null, array $context = null): void
-    {
+    public function handleError(
+        int $code,
+        string $message,
+        string $file = null,
+        int $line = null,
+        array $context = null
+    ): void {
         throw new ErrorException(
             message: $message,
             code: $code,

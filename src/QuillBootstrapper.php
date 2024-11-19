@@ -26,6 +26,7 @@ use Quill\Support\Path;
 final class QuillBootstrapper
 {
     private ContainerInterface $container;
+
     /**
      * @throws ContainerExceptionInterface
      */
@@ -46,21 +47,35 @@ final class QuillBootstrapper
         // TODO: Replace PSR-7 Factory
         $this->container->singleton(
             id: RequestInterface::class,
-            resolver: fn (CI $c) => new Request(Psr7Factory::createPsr7ServerRequest())
+            resolver: fn(CI $c) => new Request(Psr7Factory::createPsr7ServerRequest())
         );
 
         // TODO: Replace PSR-7 Factory
         $this->container->singleton(
             id: ResponseInterface::class,
-            resolver: fn (CI $c) => new Response(Psr7Factory::responseFactory()->createResponse())
+            resolver: fn(CI $c) => new Response(Psr7Factory::responseFactory()->createResponse())
         );
 
         $this->container->register(
             id: ErrorHandlerInterface::class,
-            resolver: fn (CI $c) => new JsonErrorHandler($c->get(ResponseInterface::class))
+            resolver: fn(CI $c) => new JsonErrorHandler($c->get(ResponseInterface::class))
         );
 
-        $this->container->singleton(ConfigurationInterface::class, fn (CI $c) => new Config);
+        $this->container->singleton(ConfigurationInterface::class, fn(CI $c) => new Config());
+    }
+
+    /**
+     * @throws ContainerExceptionInterface
+     */
+    private function registerQuill(): void
+    {
+        $this->container->singleton(ApplicationInterface::class, fn(CI $c) => new Quill(
+            errorHandler: $c->get(ErrorHandlerInterface::class),
+            appMiddlewares: new MiddlewareStore(),
+            middlewarePipeline: new MiddlewarePipelineHandler(),
+            response: new ResponseSender(),
+            routeStore: new RouteStore(),
+        ));
     }
 
     /**
@@ -72,7 +87,7 @@ final class QuillBootstrapper
         // The "up" function is called automatically when the route registration
         // and general configuration of the application is completed.
         // Normally at the end of the execution of the "index.php" script
-        register_shutdown_function(fn () => $this->container->get(ApplicationInterface::class)->up());
+        register_shutdown_function(fn() => $this->container->get(ApplicationInterface::class)->up());
 
         // Override PHP's default error handler
         set_error_handler([$this->container->get(ErrorHandlerInterface::class), 'handleError'], E_ALL);
@@ -97,19 +112,5 @@ final class QuillBootstrapper
                 router: $this->container->get(ApplicationInterface::class)
             ))->load();
         }
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     */
-    private function registerQuill(): void
-    {
-        $this->container->singleton(ApplicationInterface::class, fn (CI $c) => new Quill(
-            errorHandler: $c->get(ErrorHandlerInterface::class),
-            appMiddlewares: new MiddlewareStore,
-            middlewarePipeline: new MiddlewarePipelineHandler,
-            response: new ResponseSender,
-            routeStore: new RouteStore,
-        ));
     }
 }

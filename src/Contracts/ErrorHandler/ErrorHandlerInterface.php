@@ -11,13 +11,13 @@ interface ErrorHandlerInterface
     /**
      * Handles general errors within the application.
      *
-     * @throws ErrorException
-     *
      * @param int $code
      * @param string $message
      * @param string|null $file
      * @param int|null $line
      * @return void
+     * @throws ErrorException
+     *
      */
     public function handleError(int $code, string $message, ?string $file = null, ?int $line = null): void;
 }

@@ -11,7 +11,9 @@ use Quill\Support\Path;
 
 final readonly class DotEnvLoader implements FilesLoader
 {
-    public function __construct(private ConfigurationInterface $config) { }
+    public function __construct(private ConfigurationInterface $config)
+    {
+    }
 
     public function load(string ...$filenames): void
     {
@@ -21,11 +23,11 @@ final readonly class DotEnvLoader implements FilesLoader
 
         $filename ??= Path::toFile('.env');
 
-        if (! str_ends_with($filename, '.env')) {
+        if (!str_ends_with($filename, '.env')) {
             throw new InvalidArgumentException("File: {$filename} must be a .env file");
         }
 
-        if (! file_exists($filename)) {
+        if (!file_exists($filename)) {
             return;
         }
 

@@ -8,7 +8,9 @@ use Quill\Support\Path;
 
 final readonly class RouteFilesLoader implements FilesLoader
 {
-    public function __construct(private RouterInterface $router) { }
+    public function __construct(private RouterInterface $router)
+    {
+    }
 
     public function load(string ...$filenames): void
     {

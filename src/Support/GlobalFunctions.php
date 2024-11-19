@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use Psr\Container\ContainerExceptionInterface;
 use Quill\Config\Config;
 use Quill\Container\Container;
 use Quill\Contracts\ApplicationInterface;
@@ -28,7 +27,7 @@ if (!function_exists('refresh')) {
 if (!function_exists('quill')) {
     function quill(): ApplicationInterface
     {
-        if (! Container::make()->has(ApplicationInterface::class)) {
+        if (!Container::make()->has(ApplicationInterface::class)) {
             (new QuillBootstrapper())->boot();
         }
 

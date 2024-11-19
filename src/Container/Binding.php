@@ -16,7 +16,7 @@ final class Binding
 
     public function __construct(callable $resolver, bool $singleton)
     {
-        $this->resolver  = $resolver;
+        $this->resolver = $resolver;
         $this->singleton = $singleton;
     }
 

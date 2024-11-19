@@ -28,20 +28,8 @@ final class Container implements ContainerInterface
     /**
      * Protected class constructor to prevent direct object creation.
      */
-    private function __construct() { }
-
-    /**
-     * Prevent object cloning
-     */
-    private function  __clone() { }
-
-    /**
-     * prevent from being unserialized (which would create a second instance of it)
-     * @throws Exception
-     */
-    final public function __wakeup()
+    private function __construct()
     {
-        throw new Exception("Cannot unserialize the container");
     }
 
     /**
@@ -52,11 +40,20 @@ final class Container implements ContainerInterface
      */
     public static function make(...$params): ContainerInterface
     {
-        if (! isset(self::$_instance)) {
-            self::$_instance = new self;
+        if (!isset(self::$_instance)) {
+            self::$_instance = new self();
         }
 
         return self::$_instance;
+    }
+
+    /**
+     * prevent from being unserialized (which would create a second instance of it)
+     * @throws Exception
+     */
+    final public function __wakeup()
+    {
+        throw new Exception('Cannot unserialize the container');
     }
 
     /** @inheritDoc */
@@ -66,19 +63,25 @@ final class Container implements ContainerInterface
     }
 
     /** @inheritDoc */
-    public function get(string $id): mixed
-    {
-        if (!isset($this->bindings[$id])) {
-            throw new ServiceNotFoundException($id);
-        }
-
-        return $this->bindings[$id]->getInstance($this);
-    }
-
-    /** @inheritDoc */
     public function register(string $id, callable $resolver): ContainerInterface
     {
         return $this->bind($id, $resolver, singleton: false);
+    }
+
+    /**
+     * Binds a service or singleton to the container.
+     *
+     * @param string $id
+     * @param callable $resolver
+     * @param bool $singleton
+     *
+     * @return ContainerInterface
+     */
+    private function bind(string $id, callable $resolver, bool $singleton): ContainerInterface
+    {
+        $this->bindings[$id] = new Binding($resolver, $singleton);
+
+        return $this;
     }
 
     /** @inheritDoc */
@@ -104,19 +107,20 @@ final class Container implements ContainerInterface
         return $this->get($id);
     }
 
-    /**
-     * Binds a service or singleton to the container.
-     *
-     * @param string   $id
-     * @param callable $resolver
-     * @param bool     $singleton
-     *
-     * @return ContainerInterface
-     */
-    private function bind(string $id, callable $resolver, bool $singleton): ContainerInterface
+    /** @inheritDoc */
+    public function get(string $id): mixed
     {
-        $this->bindings[$id] = new Binding($resolver, $singleton);
+        if (!isset($this->bindings[$id])) {
+            throw new ServiceNotFoundException($id);
+        }
 
-        return $this;
+        return $this->bindings[$id]->getInstance($this);
+    }
+
+    /**
+     * Prevent object cloning
+     */
+    private function __clone()
+    {
     }
 }

@@ -17,17 +17,11 @@ class Path implements PathResolverInterface
     {
         $path = self::normalize($path);
 
-        if (! file_exists($path)) {
+        if (!file_exists($path)) {
             throw new Exception('The specified application path does not exist', HttpCode::SERVER_ERROR->value);
         }
 
         static::$appPath = $path;
-    }
-
-    /** @ineritDoc  */
-    public static function toFile(string $filename = ''): string
-    {
-        return static::$appPath . self::normalize($filename);
     }
 
     /**
@@ -41,5 +35,11 @@ class Path implements PathResolverInterface
         $filename = trim($filename, '/');
 
         return "/$filename";
+    }
+
+    /** @ineritDoc */
+    public static function toFile(string $filename = ''): string
+    {
+        return static::$appPath . self::normalize($filename);
     }
 }

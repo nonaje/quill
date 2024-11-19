@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Quill\Router;
 
+use Closure;
 use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteGroupInterface;
 use Quill\Contracts\Router\RouteInterface;
@@ -14,10 +15,10 @@ readonly class RouteGroup implements RouteGroupInterface
     use Middlewares;
 
     public function __construct(
-        private string                      $prefix,
-        private \Closure                    $routes,
-        private RouterInterface             $router,
-        private MiddlewareStoreInterface    $middlewares
+        private string $prefix,
+        private Closure $routes,
+        private RouterInterface $router,
+        private MiddlewareStoreInterface $middlewares
     ) {
         $this->registerRoutes();
     }

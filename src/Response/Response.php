@@ -15,12 +15,8 @@ use Quill\Support\Path;
 
 class Response implements ResponseInterface
 {
-    public function __construct(protected PsrResponseInterface $psrResponse) { }
-
-    /** @inheritDoc */
-    public function getPsrResponse(): PsrResponseInterface
+    public function __construct(protected PsrResponseInterface $psrResponse)
     {
-        return $this->psrResponse;
     }
 
     /** @inheritDoc */
@@ -29,47 +25,6 @@ class Response implements ResponseInterface
         return $this->setPsrResponse(
             $this->body($plain, MimeType::PLAIN_TEXT)
         );
-    }
-
-    /** @inheritDoc */
-    public function json(array $data): ResponseInterface
-    {
-        return $this->setPsrResponse(
-            $this->body(json_encode($data), MimeType::JSON)
-        );
-    }
-
-    /** @inheritDoc */
-    public function html(string $html): ResponseInterface
-    {
-        return $this->setPsrResponse(
-            $this->body($html, MimeType::HTML)
-        );
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function view(string $view): ResponseInterface
-    {
-        //Checks if the received argument is the name of a html file inside the 'views' folder
-        if (file_exists($path = $view) ||
-            file_exists($path = Path::toFile($view)) ||
-            file_exists($path = Path::toFile($view . '.html'))
-        ) {
-            $html = file_get_contents($path);
-            return $this->html($html);
-        }
-
-        throw new Exception('The view "' . $view . '" does not exist or is not readable.');
-    }
-
-    /** @inheritDoc */
-    public function code(HttpCode $code): ResponseInterface
-    {
-        $response = $this->psrResponse->withStatus($code->value);
-
-        return $this->setPsrResponse($response);
     }
 
     /**
@@ -97,5 +52,52 @@ class Response implements ResponseInterface
         return $this->getPsrResponse()
             ->withBody(Psr7Factory::streamFactory()->createStream($content))
             ->withHeader(HttpHeader::CONTENT_TYPE->value, $mime->value);
+    }
+
+    /** @inheritDoc */
+    public function getPsrResponse(): PsrResponseInterface
+    {
+        return $this->psrResponse;
+    }
+
+    /** @inheritDoc */
+    public function json(array $data): ResponseInterface
+    {
+        return $this->setPsrResponse(
+            $this->body(json_encode($data), MimeType::JSON)
+        );
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function view(string $view): ResponseInterface
+    {
+        //Checks if the received argument is the name of a html file inside the 'views' folder
+        if (file_exists($path = $view) ||
+            file_exists($path = Path::toFile($view)) ||
+            file_exists($path = Path::toFile($view . '.html'))
+        ) {
+            $html = file_get_contents($path);
+            return $this->html($html);
+        }
+
+        throw new Exception('The view "' . $view . '" does not exist or is not readable.');
+    }
+
+    /** @inheritDoc */
+    public function html(string $html): ResponseInterface
+    {
+        return $this->setPsrResponse(
+            $this->body($html, MimeType::HTML)
+        );
+    }
+
+    /** @inheritDoc */
+    public function code(HttpCode $code): ResponseInterface
+    {
+        $response = $this->psrResponse->withStatus($code->value);
+
+        return $this->setPsrResponse($response);
     }
 }

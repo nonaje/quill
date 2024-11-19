@@ -10,13 +10,13 @@ trait DotNotationParser
     /**
      * Converts a dot notation string into an array.
      *
-     * @param string $notation.
+     * @param string $notation .
      * @return array.
      */
     protected function dotNotationToArray(string $notation): array
     {
         return array_values(
-            array_filter( explode('.', strtolower($notation)) )
+            array_filter(explode('.', strtolower($notation)))
         );
     }
 }

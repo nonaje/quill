@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Quill\Factory\Middleware;
 
 use LogicException;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 final readonly class StringMiddleware implements MiddlewareInterface
 {
@@ -36,7 +36,7 @@ final readonly class StringMiddleware implements MiddlewareInterface
         $class = config("app.middlewares.{$this->middleware}");
 
         /** @var MiddlewareInterface $middleware */
-        $middleware = new $class;
+        $middleware = new $class();
 
         return $middleware->process($request, $handler);
     }

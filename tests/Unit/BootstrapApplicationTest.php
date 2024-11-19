@@ -1,5 +1,8 @@
 <?php
 
+use Quill\Factory\QuillFactory;
+use Quill\Quill;
+
 test('make quill')
-    ->expect(\Quill\Factory\QuillFactory::make())
-    ->toBeInstanceOf(\Quill\Quill::class);
+    ->expect(QuillFactory::make())
+    ->toBeInstanceOf(Quill::class);

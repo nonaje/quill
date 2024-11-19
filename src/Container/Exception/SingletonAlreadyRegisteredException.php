@@ -2,10 +2,11 @@
 
 namespace Quill\Container\Exception;
 
+use Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Quill\Enums\Http\HttpCode;
 
-class SingletonAlreadyRegisteredException extends \Exception implements ContainerExceptionInterface
+class SingletonAlreadyRegisteredException extends Exception implements ContainerExceptionInterface
 {
     public function __construct(string $serviceId)
     {

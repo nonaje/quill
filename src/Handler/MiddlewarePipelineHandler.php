@@ -18,7 +18,7 @@ final class MiddlewarePipelineHandler implements RequestHandlerInterface, Middle
     /** @var MiddlewareInterface[] $middlewares */
     private array $middlewares;
 
-    /** @ineritDoc  */
+    /** @ineritDoc */
     public function send(ServerRequestInterface $request): MiddlewarePipelineInterface
     {
         $this->request = $request;
@@ -42,7 +42,7 @@ final class MiddlewarePipelineHandler implements RequestHandlerInterface, Middle
         return $this;
     }
 
-    /** @ineritDoc  */
+    /** @ineritDoc */
     public function getResponse(): ResponseInterface
     {
         return $this->handle($this->request);

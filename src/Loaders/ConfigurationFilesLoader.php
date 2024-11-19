@@ -10,7 +10,9 @@ use Quill\Support\Path;
 
 final readonly class ConfigurationFilesLoader implements FilesLoader
 {
-    public function __construct(private ConfigurationInterface $config) { }
+    public function __construct(private ConfigurationInterface $config)
+    {
+    }
 
     public function load(string ...$filenames): void
     {

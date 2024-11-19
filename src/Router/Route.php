@@ -24,26 +24,6 @@ final readonly class Route implements RouteInterface
         $this->assert();
     }
 
-    public function path(): string
-    {
-        return $this->uri;
-    }
-
-    public function method(): HttpMethod
-    {
-        return $this->method;
-    }
-
-    public function target(): Closure|array|string
-    {
-        return $this->target;
-    }
-
-    public function params(): array
-    {
-        return $this->params;
-    }
-
     private function assert(): self
     {
         if (!str_starts_with($this->uri, '/')) {
@@ -55,7 +35,9 @@ final readonly class Route implements RouteInterface
         }
 
         if (!is_callable($this->target) && !is_array($this->target) && !is_string($this->target)) {
-            throw new LogicException('The route target must be of type array or callable, given ' . gettype($this->target));
+            throw new LogicException(
+                'The route target must be of type array or callable, given ' . gettype($this->target)
+            );
         }
 
         if (is_array($this->target)) {
@@ -100,5 +82,25 @@ final readonly class Route implements RouteInterface
         }
 
         return $this;
+    }
+
+    public function path(): string
+    {
+        return $this->uri;
+    }
+
+    public function method(): HttpMethod
+    {
+        return $this->method;
+    }
+
+    public function target(): Closure|array|string
+    {
+        return $this->target;
+    }
+
+    public function params(): array
+    {
+        return $this->params;
     }
 }

@@ -12,27 +12,34 @@ use Quill\Enums\RequestAttribute;
 
 readonly class Request implements RequestInterface
 {
-    public function __construct(protected ServerRequestInterface $psrRequest) { }
-
-    /** @ineritDoc  */
-    public function getPsrRequest(): ServerRequestInterface
+    public function __construct(protected ServerRequestInterface $psrRequest)
     {
-        return $this->psrRequest;
     }
 
-    /** @ineritDoc  */
+    /** @ineritDoc */
     public function route(string $key, mixed $default = null): mixed
     {
         return $this->getRoute()->params()[$key] ?? $default;
     }
 
-    /** @ineritDoc  */
+    private function getRoute(): RouteInterface
+    {
+        return $this->getPsrRequest()->getAttribute(RequestAttribute::ROUTE->value);
+    }
+
+    /** @ineritDoc */
+    public function getPsrRequest(): ServerRequestInterface
+    {
+        return $this->psrRequest;
+    }
+
+    /** @ineritDoc */
     public function method(): HttpMethod
     {
         return HttpMethod::from(strtoupper($this->getPsrRequest()->getMethod()));
     }
 
-    /** @ineritDoc  */
+    /** @ineritDoc */
     public function all(): mixed
     {
         // TODO: Implement method
@@ -40,7 +47,7 @@ readonly class Request implements RequestInterface
         return [];
     }
 
-    /** @ineritDoc  */
+    /** @ineritDoc */
     public function query(string $key, mixed $default = null): mixed
     {
         // TODO: Implement method
@@ -48,11 +55,6 @@ readonly class Request implements RequestInterface
         $value = $default;
 
         return $value;
-    }
-
-    private function getRoute(): RouteInterface
-    {
-        return $this->getPsrRequest()->getAttribute(RequestAttribute::ROUTE->value);
     }
 
     private function json(string $key, mixed $default): mixed

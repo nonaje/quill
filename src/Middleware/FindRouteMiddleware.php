@@ -5,19 +5,21 @@ declare(strict_types=1);
 namespace Quill\Middleware;
 
 use Exception;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Contracts\Router\RouterInterface;
 use Quill\Enums\Http\HttpCode;
 use Quill\Enums\RequestAttribute;
-use Psr\Http\Message\ResponseInterface;
 use Quill\Router\Route;
 
 final readonly class FindRouteMiddleware implements MiddlewareInterface
 {
-    public function __construct(private RouterInterface $router) { }
+    public function __construct(private RouterInterface $router)
+    {
+    }
 
     /**
      * Processes the incoming server request to find the matching route and pass it to the handler.
@@ -25,11 +27,11 @@ final readonly class FindRouteMiddleware implements MiddlewareInterface
      * This method attempts to find a route that matches the incoming request. If found, it attaches
      * the route as an attribute to the request and passes the modified request to the next handler.
      *
-     * @throws Exception
-     *
      * @param ServerRequestInterface $request
      * @param RequestHandlerInterface $handler
      * @return ResponseInterface
+     * @throws Exception
+     *
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
@@ -45,18 +47,20 @@ final readonly class FindRouteMiddleware implements MiddlewareInterface
      * of them match the incoming request. If a matching route is found, it clears the registered
      * routes and returns the found route with the appropriate parameters.
      *
-     * @throws Exception If no matching route is found.
-     *
      * @param ServerRequestInterface $request The incoming server request.
      *
      * @return RouteInterface The matched route.
+     * @throws Exception If no matching route is found.
+     *
      */
     private function find(ServerRequestInterface $request): RouteInterface
     {
         foreach ($this->router->routes() as $route) {
             [$match, $params] = $this->resolveRoute($route, $request);
 
-            if (! $match) continue;
+            if (!$match) {
+                continue;
+            }
 
             // Clears registered routes to free up memory once a match is found
             $this->router->clear();
