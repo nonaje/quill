@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Quill;
 
 use Closure;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Quill\Contracts\ApplicationInterface;
@@ -39,17 +38,6 @@ final class Quill extends Router implements ApplicationInterface
         RouteStoreInterface $routeStore,
     ) {
         parent::__construct($routeStore);
-
-        $this->boot();
-    }
-
-    /**
-     * Set essential settings for the operation of the application
-     *
-     * @throws Throwable
-     */
-    private function boot(): void
-    {
     }
 
     /** @inheritDoc */
@@ -68,10 +56,7 @@ final class Quill extends Router implements ApplicationInterface
         return $this;
     }
 
-    /** @inheritDoc
-     *
-     * @throws ContainerExceptionInterface
-     */
+    /** @inheritDoc */
     public function up(): void
     {
         $request = resolve(RequestInterface::class)->getPsrRequest();
