@@ -17,21 +17,25 @@ class Request implements RequestInterface
 
     protected function __construct(protected readonly ServerRequestInterface $psrRequest) { }
 
+    /** @ineritDoc  */
     public function getPsrRequest(): ServerRequestInterface
     {
         return $this->psrRequest;
     }
 
+    /** @ineritDoc  */
     public function route(string $key, mixed $default = null): mixed
     {
         return $this->getRoute()->params()[$key] ?? $default;
     }
 
+    /** @ineritDoc  */
     public function method(): HttpMethod
     {
         return HttpMethod::from(strtoupper($this->getPsrRequest()->getMethod()));
     }
 
+    /** @ineritDoc  */
     public function all(): mixed
     {
         // TODO: Implement method
@@ -39,7 +43,8 @@ class Request implements RequestInterface
         return [];
     }
 
-    public function get(string $key, mixed $default = null): mixed
+    /** @ineritDoc  */
+    public function query(string $key, mixed $default = null): mixed
     {
         // TODO: Implement method
 
