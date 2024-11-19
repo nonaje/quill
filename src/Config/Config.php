@@ -6,11 +6,10 @@ namespace Quill\Config;
 
 use Quill\Contracts\Configuration\ConfigurationInterface;
 use Quill\Support\DotNotationParser;
-use Quill\Support\Singleton;
 
 class Config implements ConfigurationInterface
 {
-    use Singleton, DotNotationParser;
+    use DotNotationParser;
 
     private array $items = [];
 

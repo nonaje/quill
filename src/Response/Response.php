@@ -12,13 +12,10 @@ use Quill\Enums\Http\HttpHeader;
 use Quill\Enums\Http\MimeType;
 use Quill\Factory\Psr7\Psr7Factory;
 use Quill\Support\Path;
-use Quill\Support\Singleton;
 
 class Response implements ResponseInterface
 {
-    use Singleton;
-
-    protected function __construct(protected PsrResponseInterface $psrResponse) { }
+    public function __construct(protected PsrResponseInterface $psrResponse) { }
 
     /** @inheritDoc */
     public function getPsrResponse(): PsrResponseInterface

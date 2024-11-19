@@ -8,17 +8,10 @@ use InvalidArgumentException;
 use Quill\Contracts\Configuration\ConfigurationInterface;
 use Quill\Contracts\Loader\FilesLoader;
 use Quill\Support\Path;
-use Quill\Support\Singleton;
 
-final class DotEnvLoader implements FilesLoader
+final readonly class DotEnvLoader implements FilesLoader
 {
-    use Singleton;
-
-    protected function __construct(
-        private readonly ConfigurationInterface $config
-    )
-    {
-    }
+    public function __construct(private ConfigurationInterface $config) { }
 
     public function load(string ...$filenames): void
     {

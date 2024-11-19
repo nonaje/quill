@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace Quill\Handler;
 
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Quill\Contracts\Container\ContainerInterface;
 use Quill\Contracts\Request\RequestInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Contracts\Response\ResponseInterface;
 use Quill\Enums\RequestAttribute;
-use Quill\Factory\QuillRequestFactory;
-use Quill\Factory\QuillResponseFactory;
 use LogicException;
+use Quill\Request\Request;
 
 final readonly class RequestHandler implements RequestHandlerInterface
 {
@@ -21,11 +22,14 @@ final readonly class RequestHandler implements RequestHandlerInterface
     private RequestInterface        $request;
     private RouteInterface          $route;
 
+    /**
+     * @throws ContainerExceptionInterface
+     */
     public function handle(ServerRequestInterface $request): PsrResponseInterface
     {
         $this->route = $request->getAttribute(RequestAttribute::ROUTE->value);
-        $this->response = QuillResponseFactory::createQuillResponse();
-        $this->request = QuillRequestFactory::createFromPsrRequest($request);
+        $this->response = resolve(ResponseInterface::class);
+        $this->request = refresh(id: RequestInterface::class, refreshed: fn (ContainerInterface $c) => new Request($request));
 
         /** @var ResponseInterface|null $response */
         $response = ($this->resolveRouteTarget())();

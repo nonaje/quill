@@ -5,35 +5,33 @@ declare(strict_types=1);
 namespace Quill;
 
 use Exception;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Quill\Config\Config;
 use Quill\Contracts\ApplicationInterface;
 use Quill\Contracts\Middleware\MiddlewarePipelineInterface;
+use Quill\Contracts\Request\RequestInterface;
+use Quill\Contracts\Response\ResponseInterface;
 use Quill\Contracts\Response\ResponseSenderInterface;
 use Quill\Contracts\Router\MiddlewareStoreInterface;
 use Quill\Contracts\Router\RouteStoreInterface;
 use Quill\Factory\Psr7\Psr7Factory;
-use Quill\Factory\QuillResponseFactory;
 use Quill\Middleware\ExecuteRouteMiddlewares;
 use Quill\Handler\RequestHandler;
 use Quill\Middleware\ExceptionHandlingMiddleware;
 use Quill\Middleware\FindRouteMiddleware;
-use Quill\Loaders\ConfigurationFilesLoader;
-use Quill\Loaders\DotEnvLoader;
-use Quill\Loaders\RouteFilesLoader;
+use Quill\Response\Response;
 use Quill\Router\Router;
 use Quill\Support\Path;
-use Quill\Support\Singleton;
+use Throwable;
 
 final class Quill extends Router implements ApplicationInterface
 {
-    use Singleton;
-
     /**
-     * @throws Exception
+     * @throws Throwable
      */
-    protected function __construct(
+    public function __construct(
         // Quill properties
         private RequestHandlerInterface              $errorHandler,
         private readonly MiddlewareStoreInterface    $appMiddlewares,
@@ -64,10 +62,13 @@ final class Quill extends Router implements ApplicationInterface
         return $this;
     }
 
-    /** @inheritDoc */
+    /** @inheritDoc
+     *
+     * @throws ContainerExceptionInterface
+     */
     public function up(): void
     {
-        $request = Psr7Factory::createPsr7ServerRequest();
+        $request = resolve(RequestInterface::class)->getPsrRequest();
 
         $response = $this->middlewarePipeline
             ->send($request)
@@ -83,37 +84,18 @@ final class Quill extends Router implements ApplicationInterface
             ->to(new RequestHandler)
             ->getResponse();
 
-        $this->response->send(QuillResponseFactory::createFromPsrResponse($response));
+        $response = refresh(id: ResponseInterface::class, refreshed: fn () => new Response($response));
+
+        $this->response->send($response);
     }
 
     /**
      * Set essential settings for the operation of the application
      *
-     * @throws Exception
+     * @throws Throwable
      */
     private function boot(): void
     {
-        // The "up" function is called automatically when the route registration
-        // and general configuration of the application is completed.
-        // Normally at the end of the execution of the "index.php" script
-         register_shutdown_function(fn () => $this->up());
 
-        // Override PHP's default error handler
-        set_error_handler([$this->errorHandler, 'handleError'], E_ALL);
-
-        // Set the root directory of the application
-        Path::setApplicationPath(dirname(__DIR__, 4));
-
-        /*----------------------------------------------------------------------------
-        | AUTOLOAD                                                                    |
-        |-----------------------------------------------------------------------------
-        | - App config files                                                          |
-        | - App environment file (.env)                                               |
-        | - App routes files                                                          |
-        |----------------------------------------------------------------------------*/
-        $config = Config::make();
-        ConfigurationFilesLoader::make($config)->load();
-        DotEnvLoader::make($config)->load();
-        RouteFilesLoader::make($this)->load();
     }
 }

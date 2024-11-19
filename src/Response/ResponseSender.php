@@ -8,12 +8,9 @@ use Quill\Contracts\Response\ResponseInterface;
 use Quill\Contracts\Response\ResponseSenderInterface;
 use Quill\Enums\Http\HttpHeader;
 use Quill\Enums\Http\MimeType;
-use Quill\Support\Singleton;
 
 final class ResponseSender implements ResponseSenderInterface
 {
-    use Singleton;
-
     public function send(ResponseInterface $response): never
     {
         $this->sendHeaders($response);

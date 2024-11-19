@@ -12,7 +12,7 @@ class Path implements PathResolverInterface
 {
     protected static string $appPath;
 
-    /** @ineritDoc  */
+    /** @ineritDoc */
     public static function setApplicationPath(string $path): void
     {
         $path = self::normalize($path);

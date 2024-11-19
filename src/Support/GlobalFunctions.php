@@ -2,32 +2,51 @@
 
 declare(strict_types=1);
 
+use Psr\Container\ContainerExceptionInterface;
 use Quill\Config\Config;
+use Quill\Container\Container;
 use Quill\Contracts\ApplicationInterface;
+use Quill\Contracts\Configuration\ConfigurationInterface;
 use Quill\Contracts\Request\RequestInterface;
 use Quill\Contracts\Response\ResponseInterface;
-use Quill\Factory\QuillFactory;
-use Quill\Factory\QuillRequestFactory;
-use Quill\Factory\QuillResponseFactory;
+use Quill\QuillBootstrapper;
+
+if (!function_exists('resolve')) {
+    function resolve(string $id): mixed
+    {
+        return Container::make()->get($id);
+    }
+}
+
+if (!function_exists('refresh')) {
+    function refresh(string $id, callable $refreshed): mixed
+    {
+        return Container::make()->refresh($id, $refreshed);
+    }
+}
 
 if (!function_exists('quill')) {
     function quill(): ApplicationInterface
     {
-        return QuillFactory::make();
+        if (! Container::make()->has(ApplicationInterface::class)) {
+            (new QuillBootstrapper())->boot();
+        }
+
+        return resolve(ApplicationInterface::class);
     }
 }
 
 if (!function_exists('request')) {
     function request(): RequestInterface
     {
-        return QuillRequestFactory::createQuillRequest();
+        return resolve(RequestInterface::class);
     }
 }
 
 if (!function_exists('response')) {
     function response(): ResponseInterface
     {
-        return QuillResponseFactory::createQuillResponse();
+        return resolve(ResponseInterface::class);
     }
 }
 
@@ -39,10 +58,12 @@ if (!function_exists('env')) {
 }
 
 if (!function_exists('config')) {
-    /** @return Config|mixed */
+    /**
+     * @return Config|mixed
+     */
     function config(string $key = null, mixed $default = null): mixed
     {
-        $config = Config::make();
+        $config = resolve(ConfigurationInterface::class);
 
         return $key ? $config->get($key, $default) : $config;
     }

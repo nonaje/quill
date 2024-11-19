@@ -9,13 +9,10 @@ use Quill\Contracts\Request\RequestInterface;
 use Quill\Contracts\Router\RouteInterface;
 use Quill\Enums\Http\HttpMethod;
 use Quill\Enums\RequestAttribute;
-use Quill\Support\Singleton;
 
-class Request implements RequestInterface
+readonly class Request implements RequestInterface
 {
-    use Singleton;
-
-    protected function __construct(protected readonly ServerRequestInterface $psrRequest) { }
+    public function __construct(protected ServerRequestInterface $psrRequest) { }
 
     /** @ineritDoc  */
     public function getPsrRequest(): ServerRequestInterface

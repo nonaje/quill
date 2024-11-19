@@ -11,14 +11,11 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Quill\Contracts\ErrorHandler\ErrorHandlerInterface;
 use Quill\Contracts\Response\ResponseInterface;
 use Quill\Enums\RequestAttribute;
-use Quill\Support\Singleton;
 use Throwable;
 
 abstract class ErrorHandler implements RequestHandlerInterface, ErrorHandlerInterface
 {
-    use Singleton;
-
-    protected function __construct(protected ResponseInterface $response) { }
+    public function __construct(protected ResponseInterface $response) { }
 
     /**
      * The request instance that contains the error

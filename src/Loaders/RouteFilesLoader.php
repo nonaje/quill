@@ -5,13 +5,10 @@ namespace Quill\Loaders;
 use Quill\Contracts\Loader\FilesLoader;
 use Quill\Contracts\Router\RouterInterface;
 use Quill\Support\Path;
-use Quill\Support\Singleton;
 
-class RouteFilesLoader implements FilesLoader
+final readonly class RouteFilesLoader implements FilesLoader
 {
-    use Singleton;
-
-    protected function __construct(private readonly RouterInterface $router) { }
+    public function __construct(private RouterInterface $router) { }
 
     public function load(string ...$filenames): void
     {
