@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="141cf780-08c1-486e-98a5-8e7d315a16fe" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker/nginx/default.conf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker/php/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lab/composer.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lab/config/app.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lab/public/index.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lab/routes/api/v1/users.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/quill/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/quill/composer.json" afterDir="false" />
-    </list>
+    <list default="true" id="141cf780-08c1-486e-98a5-8e7d315a16fe" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,7 +97,7 @@
       <workItem from="1742988151314" duration="4622000" />
       <workItem from="1742994993355" duration="5000" />
       <workItem from="1743005039808" duration="665000" />
-      <workItem from="1743005964328" duration="1859000" />
+      <workItem from="1743005964328" duration="2380000" />
     </task>
     <servers />
   </component>
