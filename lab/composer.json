@@ -1,0 +1,25 @@
+{
+  "name": "nonaje/quill",
+  "description": "The experimental environment for Quill development",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Agustin Ferrari"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../quill",
+      "options": {
+        "symlink": true
+      }
+    }
+  ],
+  "require": {
+    "php": "^8.4",
+    "nonaje/quill-framework": "*",
+    "symfony/var-dumper": "^7.0.0"
+  }
+}

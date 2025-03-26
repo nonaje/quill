@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="141cf780-08c1-486e-98a5-8e7d315a16fe" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker/nginx/default.conf" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker/php/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lab/composer.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lab/config/app.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lab/public/index.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lab/routes/api/v1/users.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/quill/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/quill/composer.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerConfigs">
+    <option name="configs">
+      <option value="$PROJECT_DIR$/quill/composer.json" />
+    </option>
+  </component>
+  <component name="ComposerSettings" notifyAboutMissingVendor="false" synchronizationState="SYNCHRONIZE">
+    <pharConfigPath>$PROJECT_DIR$/lab/composer.json</pharConfigPath>
+    <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="composer.json" />
+      </list>
+    </option>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration">
+    <include_path>
+      <path value="$PROJECT_DIR$/lab/vendor/symfony/polyfill-mbstring" />
+      <path value="$PROJECT_DIR$/lab/vendor/psr/http-server-middleware" />
+      <path value="$PROJECT_DIR$/lab/vendor/psr/http-factory" />
+      <path value="$PROJECT_DIR$/lab/vendor/psr/container" />
+      <path value="$PROJECT_DIR$/lab/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/lab/vendor/psr/http-server-handler" />
+      <path value="$PROJECT_DIR$/lab/vendor/nyholm/psr7" />
+      <path value="$PROJECT_DIR$/lab/vendor/nyholm/psr7-server" />
+      <path value="$PROJECT_DIR$/lab/vendor/symfony/deprecation-contracts" />
+      <path value="$PROJECT_DIR$/lab/vendor/composer" />
+      <path value="$PROJECT_DIR$/lab/vendor/symfony/var-dumper" />
+      <path value="$PROJECT_DIR$/lab/vendor/nonaje/quill-framework" />
+    </include_path>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2ucsV7HV4d9ghvQy76krX8OujXX" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;//wsl.localhost/Ubuntu/home/nono/code/quill-lab&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ml.llm.AIAssistantPromptsLibrary&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="\\wsl.localhost\Ubuntu\home\nono\code\quill-lab\lab" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-PS-243.26053.13" />
+        <option value="bundled-php-predefined-a98d8de5180a-1ec7b7818973-com.jetbrains.php.sharedIndexes-PS-243.26053.13" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="141cf780-08c1-486e-98a5-8e7d315a16fe" name="Changes" comment="" />
+      <created>1742559218167</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1742559218167</updated>
+      <workItem from="1742559219550" duration="14140000" />
+      <workItem from="1742581151520" duration="7309000" />
+      <workItem from="1742589957599" duration="752000" />
+      <workItem from="1742660977645" duration="623000" />
+      <workItem from="1742814791384" duration="599000" />
+      <workItem from="1742816356516" duration="2116000" />
+      <workItem from="1742987714247" duration="421000" />
+      <workItem from="1742988151314" duration="4622000" />
+      <workItem from="1742994993355" duration="5000" />
+      <workItem from="1743005039808" duration="665000" />
+      <workItem from="1743005964328" duration="1859000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
