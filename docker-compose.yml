@@ -5,9 +5,8 @@ services:
       args:
         INSTALL_XDEBUG: true
     volumes:
-      - ./quill:/var/www/quill
-      - ./lab:/var/www/lab
-    working_dir: /var/www/lab
+      - .:/var/www
+    working_dir: /var/www
     environment:
       - APP_ENV=local
     ports:
@@ -16,7 +15,7 @@ services:
   nginx:
     image: nginx:stable-alpine
     volumes:
-      - ./lab:/var/www/lab
+      - .:/var/www
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
     ports:
       - "8080:80"

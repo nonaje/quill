@@ -1,17 +1,29 @@
 {
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "7f21f9fc40ba0d561eebd461e43e6e8f",
     "packages": [
         {
             "name": "nonaje/quill-framework",
             "version": "dev-main",
-            "version_normalized": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nonaje/quill-framework.git",
+                "reference": "d837778eb4f31c2c16ba59141500ac7e372675de"
+            },
             "dist": {
-                "type": "path",
-                "url": "../quill",
-                "reference": "c9cc3eac8eceba04ae838a03ff2621d405160fa0"
+                "type": "zip",
+                "url": "https://api.github.com/repos/nonaje/quill-framework/zipball/d837778eb4f31c2c16ba59141500ac7e372675de",
+                "reference": "d837778eb4f31c2c16ba59141500ac7e372675de",
+                "shasum": ""
             },
             "require": {
                 "nyholm/psr7": "^1.8",
                 "nyholm/psr7-server": "^1.1",
+                "php": "^8.4",
                 "psr/container": "^2.0",
                 "psr/http-message": "^2.0",
                 "psr/http-server-handler": "^1.0",
@@ -21,8 +33,8 @@
                 "pestphp/pest": "^2.34",
                 "symfony/var-dumper": "^7.0"
             },
+            "default-branch": true,
             "type": "project",
-            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Quill\\": "src/"
@@ -37,16 +49,15 @@
                 }
             ],
             "description": "A simple framework to make lightweight PHP APIs",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
+            "support": {
+                "source": "https://github.com/nonaje/quill-framework/tree/main",
+                "issues": "https://github.com/nonaje/quill-framework/issues"
             },
-            "install-path": "../nonaje/quill-framework"
+            "time": "2025-03-26T17:00:25+00:00"
         },
         {
             "name": "nyholm/psr7",
             "version": "dev-master",
-            "version_normalized": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nyholm/psr7.git",
@@ -75,7 +86,6 @@
                 "phpunit/phpunit": "^7.5 || ^8.5 || ^9.4",
                 "symfony/error-handler": "^4.4"
             },
-            "time": "2024-09-09T07:06:30+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
@@ -83,7 +93,6 @@
                     "dev-master": "1.8-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Nyholm\\Psr7\\": "src/"
@@ -123,12 +132,11 @@
                     "type": "github"
                 }
             ],
-            "install-path": "../nyholm/psr7"
+            "time": "2024-09-09T07:06:30+00:00"
         },
         {
             "name": "nyholm/psr7-server",
             "version": "1.1.0",
-            "version_normalized": "1.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nyholm/psr7-server.git",
@@ -150,9 +158,7 @@
                 "nyholm/psr7": "^1.3",
                 "phpunit/phpunit": "^7.0 || ^8.5 || ^9.3"
             },
-            "time": "2023-11-08T09:30:43+00:00",
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Nyholm\\Psr7Server\\": "src/"
@@ -192,12 +198,11 @@
                     "type": "github"
                 }
             ],
-            "install-path": "../nyholm/psr7-server"
+            "time": "2023-11-08T09:30:43+00:00"
         },
         {
             "name": "psr/container",
             "version": "dev-master",
-            "version_normalized": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
@@ -212,7 +217,6 @@
             "require": {
                 "php": ">=7.4.0"
             },
-            "time": "2023-09-22T11:11:30+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
@@ -220,7 +224,6 @@
                     "dev-master": "2.0.x-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Psr\\Container\\": "src/"
@@ -249,12 +252,11 @@
                 "issues": "https://github.com/php-fig/container/issues",
                 "source": "https://github.com/php-fig/container"
             },
-            "install-path": "../psr/container"
+            "time": "2023-09-22T11:11:30+00:00"
         },
         {
             "name": "psr/http-factory",
             "version": "1.1.0",
-            "version_normalized": "1.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-factory.git",
@@ -270,14 +272,12 @@
                 "php": ">=7.1",
                 "psr/http-message": "^1.0 || ^2.0"
             },
-            "time": "2024-04-15T12:06:14+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Psr\\Http\\Message\\": "src/"
@@ -307,12 +307,11 @@
             "support": {
                 "source": "https://github.com/php-fig/http-factory"
             },
-            "install-path": "../psr/http-factory"
+            "time": "2024-04-15T12:06:14+00:00"
         },
         {
             "name": "psr/http-message",
             "version": "dev-master",
-            "version_normalized": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
@@ -327,7 +326,6 @@
             "require": {
                 "php": "^7.2 || ^8.0"
             },
-            "time": "2023-04-04T09:54:51+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
@@ -335,7 +333,6 @@
                     "dev-master": "2.0.x-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Psr\\Http\\Message\\": "src/"
@@ -364,12 +361,11 @@
             "support": {
                 "source": "https://github.com/php-fig/http-message/tree/2.0"
             },
-            "install-path": "../psr/http-message"
+            "time": "2023-04-04T09:54:51+00:00"
         },
         {
             "name": "psr/http-server-handler",
             "version": "dev-master",
-            "version_normalized": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-server-handler.git",
@@ -385,7 +381,6 @@
                 "php": ">=7.0",
                 "psr/http-message": "^1.0 || ^2.0"
             },
-            "time": "2023-11-16T18:17:39+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
@@ -393,7 +388,6 @@
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Psr\\Http\\Server\\": "src/"
@@ -424,12 +418,11 @@
             "support": {
                 "source": "https://github.com/php-fig/http-server-handler"
             },
-            "install-path": "../psr/http-server-handler"
+            "time": "2023-11-16T18:17:39+00:00"
         },
         {
             "name": "psr/http-server-middleware",
             "version": "dev-master",
-            "version_normalized": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-server-middleware.git",
@@ -446,7 +439,6 @@
                 "psr/http-message": "^1.0 || ^2.0",
                 "psr/http-server-handler": "^1.0"
             },
-            "time": "2023-09-22T11:17:21+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
@@ -454,7 +446,6 @@
                     "dev-master": "1.0.x-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "psr-4": {
                     "Psr\\Http\\Server\\": "src/"
@@ -485,12 +476,11 @@
                 "issues": "https://github.com/php-fig/http-server-middleware/issues",
                 "source": "https://github.com/php-fig/http-server-middleware"
             },
-            "install-path": "../psr/http-server-middleware"
+            "time": "2023-09-22T11:17:21+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
             "version": "dev-main",
-            "version_normalized": "dev-main",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
@@ -505,7 +495,6 @@
             "require": {
                 "php": ">=8.1"
             },
-            "time": "2024-09-25T14:21:43+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
@@ -517,7 +506,6 @@
                     "dev-main": "3.6-dev"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "function.php"
@@ -556,12 +544,11 @@
                     "type": "tidelift"
                 }
             ],
-            "install-path": "../symfony/deprecation-contracts"
+            "time": "2024-09-25T14:21:43+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
             "version": "1.x-dev",
-            "version_normalized": "1.9999999.9999999.9999999-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -583,7 +570,6 @@
             "suggest": {
                 "ext-mbstring": "For best performance"
             },
-            "time": "2024-12-23T08:48:59+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
@@ -592,7 +578,6 @@
                     "name": "symfony/polyfill"
                 }
             },
-            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "bootstrap.php"
@@ -641,12 +626,11 @@
                     "type": "tidelift"
                 }
             ],
-            "install-path": "../symfony/polyfill-mbstring"
+            "time": "2024-12-23T08:48:59+00:00"
         },
         {
             "name": "symfony/var-dumper",
             "version": "7.3.x-dev",
-            "version_normalized": "7.3.9999999.9999999-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/var-dumper.git",
@@ -674,12 +658,10 @@
                 "symfony/uid": "^6.4|^7.0",
                 "twig/twig": "^3.12"
             },
-            "time": "2025-03-17T19:44:19+00:00",
             "bin": [
                 "Resources/bin/var-dump-server"
             ],
             "type": "library",
-            "installation-source": "dist",
             "autoload": {
                 "files": [
                     "Resources/functions/dump.php"
@@ -728,9 +710,23 @@
                     "type": "tidelift"
                 }
             ],
-            "install-path": "../symfony/var-dumper"
+            "time": "2025-03-17T19:44:19+00:00"
         }
     ],
-    "dev": true,
-    "dev-package-names": []
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "nonaje/quill-framework": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": "^8.4"
+    },
+    "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.4"
+    },
+    "plugin-api-version": "2.6.0"
 }
